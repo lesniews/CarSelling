@@ -10,8 +10,10 @@ builder.Services.AddServerSideBlazor();
 // Add HTTP client for API communication
 builder.Services.AddHttpClient<ICarListingApiService, CarListingApiService>(client =>
 {
-    // Configure the API base address - use HTTP to avoid SSL certificate issues in development
-    client.BaseAddress = new Uri("http://localhost:5004/");
+    // Configure the API base address from configuration
+    var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:5004/";
+    client.BaseAddress = new Uri(apiBaseUrl);
+    Console.WriteLine($"Configured API base URL: {apiBaseUrl}");
 });
 
 var app = builder.Build();

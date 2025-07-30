@@ -1,0 +1,272 @@
+﻿@page "/car/{Id:int}"
+@inject ICarListingApiService CarListingService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@using CarSelling.Shared.Models
+@using CarSelling.Web.Services
+
+<PageTitle>@(car?.Title ?? "Car Details") - CarSelling</PageTitle>
+
+<div class="container">
+    @if (isLoading)
+    {
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>Loading car details...</p>
+        </div>
+    }
+    else if (car == null)
+    {
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">Car not found</h4>
+            <p>The car you're looking for doesn't exist or has been removed.</p>
+            <hr>
+            <p class="mb-0">
+                <a href="/search" class="btn btn-primary">Browse Other Cars</a>
+                <a href="/" class="btn btn-outline-primary ms-2">Go Home</a>
+            </p>
+        </div>
+    }
+    else
+    {
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/search">Search</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@car.Year @car.Make @car.Model</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="h3 mb-0">@car.Title</h1>
+                    </div>
+                    <div class="card-body">
+                        <!-- Car Images Placeholder -->
+                        <div class="mb-4">
+                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 300px; border-radius: 0.375rem;">
+                                <div class="text-center text-muted">
+                                    <i class="bi bi-camera" style="font-size: 3rem;"></i>
+                                    <p class="mt-2">@car.Year @car.Make @car.Model</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Car Specifications -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Make:</strong></td>
+                                        <td>@car.Make</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Model:</strong></td>
+                                        <td>@car.Model</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Year:</strong></td>
+                                        <td>@car.Year</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Mileage:</strong></td>
+                                        <td>@car.Mileage.ToString("N0") miles</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-sm">
+                                    @if (!string.IsNullOrEmpty(car.FuelType))
+                                    {
+                                        <tr>
+                                            <td><strong>Fuel Type:</strong></td>
+                                            <td>@car.FuelType</td>
+                                        </tr>
+                                    }
+                                    @if (!string.IsNullOrEmpty(car.Transmission))
+                                    {
+                                        <tr>
+                                            <td><strong>Transmission:</strong></td>
+                                            <td>@car.Transmission</td>
+                                        </tr>
+                                    }
+                                    @if (!string.IsNullOrEmpty(car.Location))
+                                    {
+                                        <tr>
+                                            <td><strong>Location:</strong></td>
+                                            <td>@car.Location</td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td><strong>Listed:</strong></td>
+                                        <td>@car.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        @if (!string.IsNullOrEmpty(car.Description))
+                        {
+                            <div class="mb-4">
+                                <h5>Description</h5>
+                                <p class="text-muted">@car.Description</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!-- Price and Contact Card -->
+                <div class="card sticky-top" style="top: 20px;">
+                    <div class="card-header">
+                        <h3 class="text-success mb-0">$@car.Price.ToString("N0")</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="mailto:@car.ContactEmail?subject=Interest in @car.Title" class="btn btn-primary btn-lg">
+                                <i class="bi bi-envelope"></i> Email Seller
+                            </a>
+
+                            @if (!string.IsNullOrEmpty(car.ContactPhone))
+                            {
+                                <a href="tel:@car.ContactPhone" class="btn btn-outline-primary">
+                                    <i class="bi bi-phone"></i> Call @car.ContactPhone
+                                </a>
+                            }
+
+                            <button class="btn btn-outline-secondary" @onclick="ShareListing">
+                                <i class="bi bi-share"></i> Share Listing
+                            </button>
+                        </div>
+
+                        <hr>
+
+                        <div class="text-center text-muted small">
+                            <p class="mb-1">Listed by: @car.ContactEmail</p>
+                            <p class="mb-0">Posted: @car.CreatedAt.ToString("MMM dd, yyyy")</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Safety Tips Card -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="mb-0">🛡️ Safety Tips</h6>
+                    </div>
+                    <div class="card-body small">
+                        <ul class="mb-0">
+                            <li>Meet in a public place</li>
+                            <li>Bring a friend if possible</li>
+                            <li>Inspect the vehicle thoroughly</li>
+                            <li>Verify ownership documents</li>
+                            <li>Consider a pre-purchase inspection</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Cars Section -->
+        <div class="mt-5">
+            <h4 class="mb-3">Similar Cars</h4>
+            @if (relatedCars != null && relatedCars.Any())
+            {
+                <div class="row">
+                    @foreach (var relatedCar in relatedCars.Take(3))
+                    {
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">@relatedCar.Title</h6>
+                                    <p class="card-text">@relatedCar.Year @relatedCar.Make @relatedCar.Model</p>
+                                    <p class="text-success h6">$@relatedCar.Price.ToString("N0")</p>
+                                    <a href="/car/@relatedCar.Id" class="btn btn-sm btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No similar cars found.</p>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private CarListing? car;
+    private IEnumerable<CarListing>? relatedCars;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCarDetails();
+    }
+
+    private async Task LoadCarDetails()
+    {
+        isLoading = true;
+        try
+        {
+            car = await CarListingService.GetCarByIdAsync(Id);
+
+            if (car != null)
+            {
+                // Load related cars (same make or similar price range)
+                var searchDto = new CarSelling.Shared.DTOs.CarListingSearchDto
+                    {
+                        Make = car.Make,
+                        PageSize = 6
+                    };
+                var allRelated = await CarListingService.SearchCarsAsync(searchDto);
+                relatedCars = allRelated.Where(c => c.Id != car.Id);
+            }
+        }
+        catch
+        {
+            // Log error in production - for now just set null
+            car = null;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ShareListing()
+    {
+        try
+        {
+            // Try to use Web Share API
+            await JSRuntime.InvokeVoidAsync("navigator.share", new
+            {
+                title = car?.Title,
+                url = Navigation.Uri
+            });
+        }
+        catch
+        {
+            try
+            {
+                // Fallback: copy to clipboard
+                await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", Navigation.Uri);
+                // You could show a toast notification here
+            }
+            catch
+            {
+                // Final fallback: just ignore the error
+                // In a real app, you might show a message to the user
+            }
+        }
+    }
+}

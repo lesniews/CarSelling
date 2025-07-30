@@ -1,0 +1,632 @@
+﻿@page "/"
+@inject ICarListingApiService CarListingService
+@inject NavigationManager Navigation
+@using CarSelling.Shared.Models
+@using CarSelling.Shared.DTOs
+@using CarSelling.Web.Services
+
+<PageTitle>CarMarket - Buy & Sell Cars with Confidence</PageTitle>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Buy & Sell Cars with Confidence</h1>
+            <p class="hero-subtitle">
+                Find your perfect car or sell your current one to thousands of buyers. Safe,
+                simple, and secure transactions.
+            </p>
+
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 16H9m10 0h3m-3-8h3m-3 0l3-3m-3 3l3 3M7 7h.01M7 3h5c.5-1 2.5-1 3 0h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+                        </svg>
+                    </div>
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">Cars Listed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="m22 21-3-3m0 0a5.002 5.002 0 1 0-7.07-7.07A5.002 5.002 0 0 0 19 18z" />
+                        </svg>
+                    </div>
+                    <div class="stat-number">50,000+</div>
+                    <div class="stat-label">Happy Customers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                        </svg>
+                    </div>
+                    <div class="stat-number">$2M+</div>
+                    <div class="stat-label">Transactions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22,12 18,12 15,21 9,3 6,12 2,12" />
+                        </svg>
+                    </div>
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Filters Section -->
+<div class="search-section">
+    <div class="container">
+        <div class="search-header">
+            <span class="results-count">@totalResults results</span>
+            <button class="clear-filters-btn" @onclick="ClearAllFilters">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+                Clear
+            </button>
+        </div>
+
+        <div class="filters-grid">
+            <!-- Vehicle Details -->
+            <div class="filter-group">
+                <h3 class="filter-title">Vehicle Details</h3>
+                <div class="filter-row">
+                    <div class="filter-field">
+                        <label>Car Brand</label>
+                        <select @bind="searchDto.Make" @bind:after="SearchCars" class="filter-select">
+                            <option value="">Any brand</option>
+                            <option value="Toyota">Toyota</option>
+                            <option value="Honda">Honda</option>
+                            <option value="Tesla">Tesla</option>
+                            <option value="BMW">BMW</option>
+                            <option value="Mercedes">Mercedes</option>
+                            <option value="Audi">Audi</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label>Car Model</label>
+                        <select @bind="searchDto.Model" @bind:after="SearchCars" class="filter-select">
+                            <option value="">Any model</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label>Model Generation</label>
+                        <select @bind="searchDto.ModelGeneration" @bind:after="SearchCars" class="filter-select">
+                            <option value="">Any generation</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label>Type of Body</label>
+                        <select @bind="searchDto.BodyType" @bind:after="SearchCars" class="filter-select">
+                            <option value="">Any body type</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Hatchback">Hatchback</option>
+                            <option value="Coupe">Coupe</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div class="filter-group">
+                <h3 class="filter-title">Location</h3>
+                <div class="filter-field full-width">
+                    <label>Location</label>
+                    <input @bind="searchDto.Location" @bind:after="SearchCars"
+                           class="filter-input" placeholder="City, State, or ZIP" />
+                </div>
+            </div>
+
+            <!-- Price Range -->
+            <div class="filter-group">
+                <h3 class="filter-title">Price Range</h3>
+                <div class="filter-row">
+                    <div class="filter-field">
+                        <label>Price From ($)</label>
+                        <input @bind="searchDto.PriceFrom" @bind:after="SearchCars"
+                               type="number" class="filter-input" placeholder="Min price" />
+                    </div>
+                    <div class="filter-field">
+                        <label>Price To ($)</label>
+                        <input @bind="searchDto.PriceTo" @bind:after="SearchCars"
+                               type="number" class="filter-input" placeholder="Max price" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Year of Production -->
+            <div class="filter-group">
+                <h3 class="filter-title">Year of Production</h3>
+                <div class="filter-row">
+                    <div class="filter-field">
+                        <label>Year From</label>
+                        <input @bind="searchDto.YearFrom" @bind:after="SearchCars"
+                               type="number" class="filter-input" placeholder="Min year" />
+                    </div>
+                    <div class="filter-field">
+                        <label>Year To</label>
+                        <input @bind="searchDto.YearTo" @bind:after="SearchCars"
+                               type="number" class="filter-input" placeholder="Max year" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mileage Range -->
+            <div class="filter-group">
+                <h3 class="filter-title">Mileage Range</h3>
+                <div class="filter-row">
+                    <div class="filter-field">
+                        <label>Mileage From (miles)</label>
+                        <input @bind="searchDto.MileageFrom" @bind:after="SearchCars"
+                               type="number" class="filter-input" placeholder="Min mileage" />
+                    </div>
+                    <div class="filter-field">
+                        <label>Mileage To (miles)</label>
+                        <input @bind="searchDto.MileageTo" @bind:after="SearchCars"
+                               type="number" class="filter-input" placeholder="Max mileage" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Engine & Drive -->
+            <div class="filter-group">
+                <h3 class="filter-title">Engine & Drive</h3>
+                <div class="filter-row">
+                    <div class="filter-field">
+                        <label>Fuel Type</label>
+                        <select @bind="searchDto.FuelType" @bind:after="SearchCars" class="filter-select">
+                            <option value="">Any fuel type</option>
+                            <option value="Gasoline">Gasoline</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="Diesel">Diesel</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label>Transmission</label>
+                        <select @bind="searchDto.Transmission" @bind:after="SearchCars" class="filter-select">
+                            <option value="">Any transmission</option>
+                            <option value="Automatic">Automatic</option>
+                            <option value="Manual">Manual</option>
+                            <option value="CVT">CVT</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Car Status -->
+            <div class="filter-group">
+                <h3 class="filter-title">Car Status</h3>
+                <div class="filter-row">
+                    <div class="filter-field">
+                        <label>Condition</label>
+                        <select @bind="searchDto.Condition" @bind:after="SearchCars" class="filter-select">
+                            <option value="">Any condition</option>
+                            <option value="Excellent">Excellent</option>
+                            <option value="Very Good">Very Good</option>
+                            <option value="Good">Good</option>
+                            <option value="Fair">Fair</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label>Damage Status</label>
+                        <select @bind="searchDto.DamageStatus" @bind:after="SearchCars" class="filter-select">
+                            <option value="">Any damage status</option>
+                            <option value="No Damage">No Damage</option>
+                            <option value="Minor Damage">Minor Damage</option>
+                            <option value="Major Damage">Major Damage</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label>Car Status</label>
+                        <select @bind="searchDto.CarStatus" @bind:after="SearchCars" class="filter-select">
+                            <option value="">Any car status</option>
+                            <option value="Clean Title">Clean Title</option>
+                            <option value="Salvage">Salvage</option>
+                            <option value="Rebuilt">Rebuilt</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Equipment Filters -->
+@if (showEquipmentFilters)
+{
+    <div class="equipment-section">
+        <div class="container">
+            <h3 class="filter-title">Equipment</h3>
+            <div class="equipment-grid">
+                @foreach (var equipment in availableEquipment)
+                {
+                    <label class="equipment-checkbox">
+                        <input type="checkbox" @onchange="@((e) => ToggleEquipment(equipment, (bool)e.Value!))" />
+                        <span class="checkmark"></span>
+                        @equipment
+                    </label>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Available Cars Section -->
+<div class="cars-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Available Cars (@totalResults)</h2>
+            <div class="view-controls">
+                <label>Sort by:</label>
+                <select @bind="sortBy" @bind:after="SearchCars" class="sort-select">
+                    <option value="newest">Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="mileage">Lowest Mileage</option>
+                    <option value="year">Newest Year</option>
+                </select>
+                <div class="view-toggle">
+                    <button class="view-btn @(viewMode == "grid" ? "active" : "")" @onclick="SetGridView">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
+                        </svg>
+                    </button>
+                    <button class="view-btn @(viewMode == "list" ? "active" : "")" @onclick="SetListView">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6" />
+                            <line x1="8" y1="12" x2="21" y2="12" />
+                            <line x1="8" y1="18" x2="21" y2="18" />
+                            <line x1="3" y1="6" x2="3.01" y2="6" />
+                            <line x1="3" y1="12" x2="3.01" y2="12" />
+                            <line x1="3" y1="18" x2="3.01" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        @if (isLoading)
+        {
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading cars...</p>
+            </div>
+        }
+        else if (searchResults != null && searchResults.Any())
+        {
+            <div class="cars-grid @viewMode">
+                @foreach (var car in searchResults)
+                {
+                    <div class="car-card">
+                        <div class="car-image">
+                            <img src="@GetCarImageUrl(car)" alt="@car.Title" />
+                            <div class="condition-badge @GetConditionClass(car.Condition)">
+                                @car.Condition
+                            </div>
+                            <button class="favorite-btn" @onclick="@(() => ToggleFavorite(car.Id))">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="car-info">
+                            <h3 class="car-title">@car.Year @car.Make @car.Model</h3>
+                            <div class="car-price">${@car.Price.ToString("N0")}</div>
+                            <div class="car-details">
+                                <span class="detail-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                        <line x1="16" y1="2" x2="16" y2="6" />
+                                        <line x1="8" y1="2" x2="8" y2="6" />
+                                        <line x1="3" y1="10" x2="21" y2="10" />
+                                    </svg>
+                                    @car.Year
+                                </span>
+                                <span class="detail-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                                        <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
+                                    </svg>
+                                    @car.Mileage.ToString("N0") mi
+                                </span>
+                                <span class="detail-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 11a2 2 0 1 1-4 0 4 4 0 0 1 8 0c0 1-1 1-1 1h-4.5" />
+                                        <path d="M5.5 15.5c.5.167.5.833.5 1a2 2 0 1 0 4 0c0-.167 0-.833.5-1" />
+                                        <path d="M9 7v1a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V7a2 2 0 1 0-4 0 2 2 0 1 0-2 0z" />
+                                    </svg>
+                                    @car.FuelType
+                                </span>
+                                <span class="detail-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="3" />
+                                        <path d="M12 1v6m0 6v6" />
+                                        <path d="m21 12-6 0m-6 0-6 0" />
+                                    </svg>
+                                    @car.Transmission
+                                </span>
+                            </div>
+                            <div class="car-location">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                                @car.Location
+                            </div>
+                            <div class="seller-info">
+                                @if (car.SellerType == "Professional Dealer")
+                                {
+                                    <span class="seller-badge dealer">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M3 21h18" />
+                                            <path d="M5 21V7l8-4v18" />
+                                            <path d="M19 21V11l-6-4" />
+                                        </svg>
+                                        Professional Dealer
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="seller-badge private">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                            <circle cx="12" cy="7" r="4" />
+                                        </svg>
+                                        Private Seller
+                                    </span>
+                                }
+                                <span class="listing-time">@GetListingTime(car.CreatedAt)</span>
+                            </div>
+                            <button class="view-details-btn" @onclick="@(() => ViewCarDetails(car.Id))">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="no-results">
+                <h3>No cars found</h3>
+                <p>Try adjusting your search filters or <a href="/create-listing">list your car for sale</a>.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private ExtendedCarListingSearchDto searchDto = new();
+    private IEnumerable<CarListing>? searchResults;
+    private bool isLoading = true;
+    private int totalResults = 6;
+    private string viewMode = "grid";
+    private string sortBy = "newest";
+    private bool showEquipmentFilters = false;
+    private List<string> selectedEquipment = new();
+
+    private readonly List<string> availableEquipment = CarEquipment.AvailableEquipment;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SearchCars();
+    }
+
+    private async Task SearchCars()
+    {
+        isLoading = true;
+        try
+        {
+            // Simulate API call - in real implementation, use CarListingService
+            await Task.Delay(500); // Simulate loading
+
+            // Mock data for demonstration
+            searchResults = GetMockCarListings();
+            totalResults = searchResults.Count();
+        }
+        catch
+        {
+            searchResults = new List<CarListing>();
+            totalResults = 0;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ClearAllFilters()
+    {
+        searchDto = new ExtendedCarListingSearchDto();
+        selectedEquipment.Clear();
+        await SearchCars();
+    }
+
+    private async Task ToggleEquipment(string equipment, bool selected)
+    {
+        if (selected)
+            selectedEquipment.Add(equipment);
+        else
+            selectedEquipment.Remove(equipment);
+
+        await SearchCars();
+    }
+
+    private async Task ToggleFavorite(int carId)
+    {
+        // Implement favorite functionality
+        await Task.CompletedTask;
+    }
+
+    private void ViewCarDetails(int carId)
+    {
+        Navigation.NavigateTo($"/car/{carId}");
+    }
+
+    // Separate methods for view mode to avoid Razor compilation issues
+    private void SetGridView()
+    {
+        viewMode = "grid";
+    }
+
+    private void SetListView()
+    {
+        viewMode = "list";
+    }
+
+    private string GetCarImageUrl(CarListing car)
+    {
+        // Return realistic car images based on make and model
+        return GetCarImage(car.Make, car.Model, car.Year);
+    }
+
+    private string GetCarImage(string make, string model, int year)
+    {
+        return make.ToLower() switch
+        {
+            "toyota" => "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?w=400&h=300&fit=crop&auto=format",
+            "honda" => "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=400&h=300&fit=crop&auto=format",
+            "tesla" => "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=400&h=300&fit=crop&auto=format",
+            "bmw" => "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&h=300&fit=crop&auto=format",
+            "mercedes" => "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=400&h=300&fit=crop&auto=format",
+            "audi" => "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=400&h=300&fit=crop&auto=format",
+            _ => "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=300&fit=crop&auto=format"
+        };
+    }
+
+    private string GetConditionClass(string condition)
+    {
+        return condition.ToLower() switch
+        {
+            "excellent" => "excellent",
+            "very good" => "very-good",
+            "good" => "good",
+            _ => "fair"
+        };
+    }
+
+    private string GetListingTime(DateTime createdAt)
+    {
+        var timeSpan = DateTime.Now - createdAt;
+        return timeSpan.Days switch
+        {
+            0 => "Today",
+            1 => "1 day ago",
+            < 7 => $"{timeSpan.Days} days ago",
+            < 30 => $"{timeSpan.Days / 7} weeks ago",
+            _ => $"{timeSpan.Days / 30} months ago"
+        };
+    }
+
+    private IEnumerable<CarListing> GetMockCarListings()
+    {
+        return new List<CarListing>
+        {
+            new() {
+                Id = 1,
+                Title = "2022 Toyota Camry LE",
+                Make = "Toyota",
+                Model = "Camry",
+                Year = 2022,
+                Price = 28500,
+                Mileage = 15000,
+                FuelType = "Gasoline",
+                Transmission = "Automatic",
+                Condition = "Excellent",
+                Location = "San Francisco, CA",
+                SellerType = "Private Seller",
+                CreatedAt = DateTime.Now.AddDays(-2)
+            },
+            new() {
+                Id = 2,
+                Title = "2020 Honda Accord Sport",
+                Make = "Honda",
+                Model = "Accord",
+                Year = 2020,
+                Price = 26900,
+                Mileage = 32000,
+                FuelType = "Gasoline",
+                Transmission = "Manual",
+                Condition = "Very Good",
+                Location = "Los Angeles, CA",
+                SellerType = "Professional Dealer",
+                CreatedAt = DateTime.Now.AddDays(-7)
+            },
+            new() {
+                Id = 3,
+                Title = "2023 Tesla Model 3",
+                Make = "Tesla",
+                Model = "Model 3",
+                Year = 2023,
+                Price = 42000,
+                Mileage = 8000,
+                FuelType = "Electric",
+                Transmission = "Automatic",
+                Condition = "Excellent",
+                Location = "Seattle, WA",
+                SellerType = "Private Seller",
+                CreatedAt = DateTime.Now.AddDays(-3)
+            },
+            new() {
+                Id = 4,
+                Title = "2021 BMW 3 Series",
+                Make = "BMW",
+                Model = "3 Series",
+                Year = 2021,
+                Price = 35900,
+                Mileage = 24000,
+                FuelType = "Gasoline",
+                Transmission = "Automatic",
+                Condition = "Very Good",
+                Location = "Austin, TX",
+                SellerType = "Professional Dealer",
+                CreatedAt = DateTime.Now.AddDays(-5)
+            },
+            new() {
+                Id = 5,
+                Title = "2019 Mercedes-Benz C-Class",
+                Make = "Mercedes",
+                Model = "C-Class",
+                Year = 2019,
+                Price = 31500,
+                Mileage = 45000,
+                FuelType = "Gasoline",
+                Transmission = "Automatic",
+                Condition = "Good",
+                Location = "Miami, FL",
+                SellerType = "Private Seller",
+                CreatedAt = DateTime.Now.AddDays(-1)
+            },
+            new() {
+                Id = 6,
+                Title = "2020 Audi A4 Premium",
+                Make = "Audi",
+                Model = "A4",
+                Year = 2020,
+                Price = 33800,
+                Mileage = 28000,
+                FuelType = "Gasoline",
+                Transmission = "Automatic",
+                Condition = "Excellent",
+                Location = "Denver, CO",
+                SellerType = "Professional Dealer",
+                CreatedAt = DateTime.Now.AddDays(-4)
+            }
+        };
+    }
+}

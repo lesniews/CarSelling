@@ -1,41 +1,48 @@
--- Sample Car Data for CarSelling Database
--- This script inserts sample users and 15 car listings with only basic existing fields
--- Based on actual database columns that exist in the physical database
+-- Complete Database Setup Script for CarSelling
+-- This script sets up the database with UserType column and sample data
+-- Run this script to initialize your database with sample users and car listings
 
--- Clear existing data (optional - uncomment if needed)
+-- Step 1: Add UserType column to Users table if it doesn't exist
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+               WHERE TABLE_NAME = 'Users' AND COLUMN_NAME = 'UserType')
+BEGIN
+    ALTER TABLE Users 
+    ADD UserType NVARCHAR(20) NOT NULL DEFAULT 'Individual';
+    PRINT 'UserType column added to Users table successfully.';
+END
+ELSE
+BEGIN
+    PRINT 'UserType column already exists in Users table.';
+END
+
+-- Step 2: Clear existing data (optional - uncomment if needed)
 -- DELETE FROM CarListings;
 -- DELETE FROM Users;
 
--- First, insert sample users with only basic fields that exist in DB
--- NOTE: Run AddUserTypeColumn.sql first to add the UserType column before using this script
--- For now, inserting without UserType column (will use default 'Individual' value if column exists)
+-- Step 3: Insert sample users
 INSERT INTO Users (
-    Id, Name, Email, Phone
+    Id, Name, Email, Phone, UserType
 ) VALUES
 -- Individual Users
-('user1', 'John Smith', 'john.smith@email.com', '+1-555-0101'),
-('user2', 'Sarah Wilson', 'sarah.wilson@email.com', '+1-555-0103'),
-('user3', 'Mercedes Owner', 'mercedes.owner@email.com', '+1-555-0105'),
-('user4', 'Truck Owner', 'truck.owner@email.com', '+1-555-0107'),
-('user5', 'Outdoor Lover', 'outdoor.lover@email.com', '+1-555-0109'),
-('user6', 'Jeep Enthusiast', 'jeep.enthusiast@email.com', '+1-555-0111'),
-('user7', 'VW Owner', 'vw.owner@email.com', '+1-555-0113'),
-('user8', 'Porsche Collector', 'porsche.collector@email.com', '+1-555-0115'),
+('user1', 'John Smith', 'john.smith@email.com', '+1-555-0101', 'Individual'),
+('user2', 'Sarah Wilson', 'sarah.wilson@email.com', '+1-555-0103', 'Individual'),
+('user3', 'Mercedes Owner', 'mercedes.owner@email.com', '+1-555-0105', 'Individual'),
+('user4', 'Truck Owner', 'truck.owner@email.com', '+1-555-0107', 'Individual'),
+('user5', 'Outdoor Lover', 'outdoor.lover@email.com', '+1-555-0109', 'Individual'),
+('user6', 'Jeep Enthusiast', 'jeep.enthusiast@email.com', '+1-555-0111', 'Individual'),
+('user7', 'VW Owner', 'vw.owner@email.com', '+1-555-0113', 'Individual'),
+('user8', 'Porsche Collector', 'porsche.collector@email.com', '+1-555-0115', 'Individual'),
 
--- Dealer Users (will need to update UserType manually or run update script after AddUserTypeColumn.sql)
-('dealer1', 'Acme Auto Sales', 'dealer@acmeauto.com', '+1-555-0102'),
-('dealer2', 'Luxury BMW Dealer', 'bmw.dealer@luxury.com', '+1-555-0104'),
-('dealer3', 'Premium Audi', 'audi.sales@premium.com', '+1-555-0106'),
-('dealer4', 'Chevy Auto', 'chevy.dealer@auto.com', '+1-555-0108'),
-('dealer5', 'Mazda Sales', 'mazda.sales@dealer.com', '+1-555-0110'),
-('dealer6', 'Hyundai Auto', 'hyundai.dealer@auto.com', '+1-555-0112'),
-('dealer7', 'Lexus Sales', 'lexus.sales@luxury.com', '+1-555-0114');
+-- Dealer Users
+('dealer1', 'Acme Auto Sales', 'dealer@acmeauto.com', '+1-555-0102', 'Dealer'),
+('dealer2', 'Luxury BMW Dealer', 'bmw.dealer@luxury.com', '+1-555-0104', 'Dealer'),
+('dealer3', 'Premium Audi', 'audi.sales@premium.com', '+1-555-0106', 'Dealer'),
+('dealer4', 'Chevy Auto', 'chevy.dealer@auto.com', '+1-555-0108', 'Dealer'),
+('dealer5', 'Mazda Sales', 'mazda.sales@dealer.com', '+1-555-0110', 'Dealer'),
+('dealer6', 'Hyundai Auto', 'hyundai.dealer@auto.com', '+1-555-0112', 'Dealer'),
+('dealer7', 'Lexus Sales', 'lexus.sales@luxury.com', '+1-555-0114', 'Dealer');
 
--- Update dealer users to have UserType = 'Dealer' (run this after AddUserTypeColumn.sql)
--- Uncomment the following lines after running AddUserTypeColumn.sql:
--- UPDATE Users SET UserType = 'Dealer' WHERE Id IN ('dealer1', 'dealer2', 'dealer3', 'dealer4', 'dealer5', 'dealer6', 'dealer7');
-
--- Now insert 15 sample car listings with only existing fields
+-- Step 4: Insert 15 sample car listings
 INSERT INTO CarListings (
     Title, Make, Model, Year, Price, Mileage,
     FuelType, Transmission, Description,
@@ -207,9 +214,14 @@ INSERT INTO CarListings (
     GETUTCDATE(), GETUTCDATE(), 1, 'user8'
 );
 
--- Verify the data was inserted
+-- Step 5: Verify the data was inserted
 SELECT COUNT(*) as 'Total Users Inserted' FROM Users;
 SELECT COUNT(*) as 'Total Cars Inserted' FROM CarListings;
+
+-- Display users with their types
+SELECT Id, Name, Email, UserType FROM Users ORDER BY UserType, Name;
+
+-- Display cars with their owners
 SELECT c.Title, c.Make, c.Model, c.Year, c.Price, u.Name as Owner, u.UserType 
 FROM CarListings c 
 JOIN Users u ON c.UserId = u.Id 

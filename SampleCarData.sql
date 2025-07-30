@@ -1,38 +1,35 @@
 -- Sample Car Data for CarSelling Database
--- This script inserts sample users and 15 car listings with all required fields
--- Based on actual database schema and service implementation
--- Includes proper user references and all necessary fields
+-- This script inserts sample users and 15 car listings with only basic existing fields
+-- Based on actual database columns that exist in the physical database
 
 -- Clear existing data (optional - uncomment if needed)
 -- DELETE FROM CarListings;
 -- DELETE FROM Users;
 
--- First, insert sample users that will own the car listings
+-- First, insert sample users with only basic fields that exist in DB
 INSERT INTO Users (
-    Id, Name, Email, Phone,
-    PreferredLocation, UserType, CompanyName, LicenseNumber,
-    TotalListings, SoldCars, AverageRating, ReviewCount
+    Id, Name, Email, Phone, UserType
 ) VALUES
 -- Individual Users
-('user1', 'John Smith', 'john.smith@email.com', '+1-555-0101', 'San Francisco, CA', 'Individual', '', '', 0, 0, 0.0, 0),
-('user2', 'Sarah Wilson', 'sarah.wilson@email.com', '+1-555-0103', 'Seattle, WA', 'Individual', '', '', 0, 0, 0.0, 0),
-('user3', 'Mercedes Owner', 'mercedes.owner@email.com', '+1-555-0105', 'Miami, FL', 'Individual', '', '', 0, 0, 0.0, 0),
-('user4', 'Truck Owner', 'truck.owner@email.com', '+1-555-0107', 'Houston, TX', 'Individual', '', '', 0, 0, 0.0, 0),
-('user5', 'Outdoor Lover', 'outdoor.lover@email.com', '+1-555-0109', 'Portland, OR', 'Individual', '', '', 0, 0, 0.0, 0),
-('user6', 'Jeep Enthusiast', 'jeep.enthusiast@email.com', '+1-555-0111', 'Salt Lake City, UT', 'Individual', '', '', 0, 0, 0.0, 0),
-('user7', 'VW Owner', 'vw.owner@email.com', '+1-555-0113', 'Chicago, IL', 'Individual', '', '', 0, 0, 0.0, 0),
-('user8', 'Porsche Collector', 'porsche.collector@email.com', '+1-555-0115', 'Beverly Hills, CA', 'Individual', '', '', 0, 0, 0.0, 0),
+('user1', 'John Smith', 'john.smith@email.com', '+1-555-0101', 'Individual'),
+('user2', 'Sarah Wilson', 'sarah.wilson@email.com', '+1-555-0103', 'Individual'),
+('user3', 'Mercedes Owner', 'mercedes.owner@email.com', '+1-555-0105', 'Individual'),
+('user4', 'Truck Owner', 'truck.owner@email.com', '+1-555-0107', 'Individual'),
+('user5', 'Outdoor Lover', 'outdoor.lover@email.com', '+1-555-0109', 'Individual'),
+('user6', 'Jeep Enthusiast', 'jeep.enthusiast@email.com', '+1-555-0111', 'Individual'),
+('user7', 'VW Owner', 'vw.owner@email.com', '+1-555-0113', 'Individual'),
+('user8', 'Porsche Collector', 'porsche.collector@email.com', '+1-555-0115', 'Individual'),
 
 -- Dealer Users
-('dealer1', 'Acme Auto Sales', 'dealer@acmeauto.com', '+1-555-0102', 'Los Angeles, CA', 'Dealer', 'Acme Auto Sales', 'DL12345', 0, 0, 4.6, 0),
-('dealer2', 'Luxury BMW Dealer', 'bmw.dealer@luxury.com', '+1-555-0104', 'Austin, TX', 'Dealer', 'Luxury Motors BMW', 'DL23456', 0, 0, 4.7, 0),
-('dealer3', 'Premium Audi', 'audi.sales@premium.com', '+1-555-0106', 'Denver, CO', 'Dealer', 'Premium Audi Denver', 'DL34567', 0, 0, 4.8, 0),
-('dealer4', 'Chevy Auto', 'chevy.dealer@auto.com', '+1-555-0108', 'Phoenix, AZ', 'Dealer', 'Phoenix Chevrolet', 'DL45678', 0, 0, 4.4, 0),
-('dealer5', 'Mazda Sales', 'mazda.sales@dealer.com', '+1-555-0110', 'Atlanta, GA', 'Dealer', 'Atlanta Mazda', 'DL56789', 0, 0, 4.7, 0),
-('dealer6', 'Hyundai Auto', 'hyundai.dealer@auto.com', '+1-555-0112', 'Las Vegas, NV', 'Dealer', 'Vegas Hyundai', 'DL67890', 0, 0, 4.5, 0),
-('dealer7', 'Lexus Sales', 'lexus.sales@luxury.com', '+1-555-0114', 'San Diego, CA', 'Dealer', 'San Diego Lexus', 'DL78901', 0, 0, 4.9, 0);
+('dealer1', 'Acme Auto Sales', 'dealer@acmeauto.com', '+1-555-0102', 'Dealer'),
+('dealer2', 'Luxury BMW Dealer', 'bmw.dealer@luxury.com', '+1-555-0104', 'Dealer'),
+('dealer3', 'Premium Audi', 'audi.sales@premium.com', '+1-555-0106', 'Dealer'),
+('dealer4', 'Chevy Auto', 'chevy.dealer@auto.com', '+1-555-0108', 'Dealer'),
+('dealer5', 'Mazda Sales', 'mazda.sales@dealer.com', '+1-555-0110', 'Dealer'),
+('dealer6', 'Hyundai Auto', 'hyundai.dealer@auto.com', '+1-555-0112', 'Dealer'),
+('dealer7', 'Lexus Sales', 'lexus.sales@luxury.com', '+1-555-0114', 'Dealer');
 
--- Now insert 15 sample car listings
+-- Now insert 15 sample car listings with only existing fields
 INSERT INTO CarListings (
     Title, Make, Model, Year, Price, Mileage,
     FuelType, Transmission, Description,

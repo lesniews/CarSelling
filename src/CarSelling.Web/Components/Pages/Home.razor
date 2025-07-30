@@ -18,7 +18,7 @@
             </p>
 
             <!-- Statistics -->
-            <div class="stats-grid">
+            <div class="stats-row">
                 <div class="stat-item">
                     <div class="stat-icon">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -432,12 +432,9 @@
         isLoading = true;
         try
         {
-            // Simulate API call - in real implementation, use CarListingService
-            await Task.Delay(500); // Simulate loading
-
-            // Mock data for demonstration
-            searchResults = GetMockCarListings();
-            totalResults = searchResults.Count();
+            var result = await CarListingService.SearchCarListingsAsync(searchDto);
+            searchResults = result.Data ?? new List<CarListing>();
+            totalResults = result.TotalCount;
         }
         catch
         {

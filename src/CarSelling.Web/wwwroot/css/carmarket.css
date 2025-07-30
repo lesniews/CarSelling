@@ -243,6 +243,16 @@ body {
     margin-top: var(--spacing-12);
 }
 
+/* Statistics Row - All stats in one line */
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-4);
+    margin-top: var(--spacing-12);
+    flex-wrap: wrap;
+}
+
 .stat-item {
     text-align: center;
     padding: var(--spacing-6);
@@ -773,6 +783,11 @@ body {
         gap: var(--spacing-4);
     }
 
+    .stats-row {
+        justify-content: center;
+        gap: var(--spacing-6);
+    }
+
     .filter-row {
         grid-template-columns: 1fr;
     }
@@ -825,6 +840,11 @@ body {
 
     .stats-grid {
         grid-template-columns: 1fr;
+    }
+
+    .stats-row {
+        flex-direction: column;
+        gap: var(--spacing-4);
     }
 
     .car-details {

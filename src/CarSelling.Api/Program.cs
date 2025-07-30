@@ -48,10 +48,16 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Initialize database
+// Initialize database (recreate on each run during development)
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<CarSellingContext>();
+    
+    // Delete and recreate database to ensure schema changes are applied
+    if (app.Environment.IsDevelopment())
+    {
+        await context.Database.EnsureDeletedAsync();
+    }
     await context.Database.EnsureCreatedAsync();
 }
 

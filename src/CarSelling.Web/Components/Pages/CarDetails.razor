@@ -47,15 +47,38 @@
                 <div class="image-gallery-card">
                     <div class="main-image-container">
                         <div class="main-image">
-                            <div class="image-placeholder">
-                                <svg class="camera-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                <p>@car.Year @car.Make @car.Model</p>
-                            </div>
+                            @if (car.Images != null && car.Images.Any())
+                            {
+                                <img src="@car.Images[currentImageIndex]" alt="@car.Title" class="car-main-image" />
+                                @if (car.Images.Count > 1)
+                                {
+                                    <div class="image-navigation">
+                                        <button class="nav-btn prev-btn" @onclick="PreviousImage">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="nav-btn next-btn" @onclick="NextImage">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="image-indicators">
+                                        @for (int i = 0; i < car.Images.Count; i++)
+                                        {
+                                            int index = i;
+                                            <button class="indicator @(currentImageIndex == index ? "active" : "")" @onclick="() => SelectImage(index)"></button>
+                                        }
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <img src="@GetCarImageUrl(car)" alt="@car.Title" class="car-main-image" />
+                            }
                             <div class="image-badges">
-                                <span class="condition-badge">@(string.IsNullOrEmpty(car.Condition) ? "Used" : car.Condition)</span>
+                                <span class="condition-badge @GetConditionClass(car.Condition)">@(string.IsNullOrEmpty(car.Condition) ? "Used" : car.Condition)</span>
                             </div>
                             <div class="image-actions">
                                 <button class="favorite-btn" @onclick="ToggleFavorite">
@@ -480,21 +503,23 @@
                         <div class="similar-cars-content">
                             @foreach (var relatedCar in relatedCars.Take(3))
                             {
-                                <div class="similar-car-item" @onclick="() => NavigateToCarDetails(relatedCar.Id)">
+                                <a href="/car/@relatedCar.Id" class="similar-car-item">
                                     <div class="similar-car-image">
-                                        <div class="similar-car-placeholder">
-                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12a3 3 0 116 0 3 3 0 01-6 0z"></path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14h2l-2-8H5l-2 8h2m6 5a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                            </svg>
-                                        </div>
+                                        @if (relatedCar.Images != null && relatedCar.Images.Any())
+                                        {
+                                            <img src="@relatedCar.Images.First()" alt="@relatedCar.Title" class="similar-car-img" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@GetCarImageUrl(relatedCar)" alt="@relatedCar.Title" class="similar-car-img" />
+                                        }
                                     </div>
                                     <div class="similar-car-info">
                                         <h4 class="similar-car-title">@relatedCar.Title</h4>
                                         <p class="similar-car-price">$@relatedCar.Price.ToString("N0")</p>
                                         <p class="similar-car-location">@(relatedCar.Location ?? "Location N/A")</p>
                                     </div>
-                                </div>
+                                </a>
                             }
                         </div>
                     </div>
@@ -586,10 +611,6 @@
         }
     }
 
-    private void NavigateToCarDetails(int carId)
-    {
-        Navigation.NavigateTo($"/car/{carId}");
-    }
 
     private void NextImage()
     {
@@ -630,5 +651,25 @@
             return "No equipment listed";
         
         return string.Join(", ", equipment);
+    }
+
+    private string GetCarImageUrl(CarListing car)
+    {
+        // Return realistic car images based on make and model
+        return GetCarImage(car.Make, car.Model, car.Year);
+    }
+
+    private string GetCarImage(string make, string model, int year)
+    {
+        return make.ToLower() switch
+        {
+            "toyota" => "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?w=800&h=600&fit=crop&auto=format",
+            "honda" => "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&h=600&fit=crop&auto=format",
+            "tesla" => "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&h=600&fit=crop&auto=format",
+            "bmw" => "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop&auto=format",
+            "mercedes" => "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop&auto=format",
+            "audi" => "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop&auto=format",
+            _ => "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop&auto=format"
+        };
     }
 }

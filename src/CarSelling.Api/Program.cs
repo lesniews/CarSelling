@@ -59,6 +59,12 @@ using (var scope = app.Services.CreateScope())
         await context.Database.EnsureDeletedAsync();
     }
     await context.Database.EnsureCreatedAsync();
+    
+    // Seed sample data on every startup in development
+    if (app.Environment.IsDevelopment())
+    {
+        await SampleDataSeeder.SeedSampleDataAsync(context);
+    }
 }
 
 app.Run();

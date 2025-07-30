@@ -460,36 +460,69 @@
                     </div>
                 </div>
 
-                <!-- Price Breakdown -->
-                <div class="price-card">
+                <!-- Location Map -->
+                <div class="location-map-card">
                     <div class="card-header">
-                        <h3>Price Breakdown</h3>
+                        <h3>
+                            <svg class="location-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Location
+                        </h3>
                     </div>
-                    <div class="price-content">
-                        <div class="price-main">
-                            <span class="price-label">Listed Price:</span>
-                            <span class="price-amount">$@car.Price.ToString("N0")</span>
+                    <div class="location-content">
+                        <div class="location-info">
+                            <p class="location-address">@(car.Location ?? "Location not specified")</p>
+                            <p class="location-note">Approximate location for privacy</p>
                         </div>
-                        <div class="price-separator"></div>
-                        <div class="price-notes">
-                            <p>• Price excludes taxes and fees</p>
-                            @if (!string.IsNullOrEmpty(car.FinancingOptions))
-                            {
-                                <p>• @car.FinancingOptions</p>
-                            }
-                            else
-                            {
-                                <p>• Financing options may be available</p>
-                            }
-                            @if (car.TradeInAccepted)
-                            {
-                                <p>• Trade-in accepted</p>
-                            }
-                            @if (car.NegotiablePrice)
-                            {
-                                <p>• Price is negotiable</p>
-                            }
-                        </div>
+                        @if (!string.IsNullOrEmpty(car.Location))
+                        {
+                            <div class="map-container">
+                                @if (HasValidGoogleMapsApiKey())
+                                {
+                                    <iframe
+                                        src="https://www.google.com/maps/embed/v1/place?key=@GetGoogleMapsApiKey()&q=@System.Web.HttpUtility.UrlEncode(car.Location)&zoom=12"
+                                        width="100%"
+                                        height="250"
+                                        style="border:0; border-radius: var(--radius-lg);"
+                                        allowfullscreen=""
+                                        loading="lazy"
+                                        referrerpolicy="no-referrer-when-downgrade">
+                                    </iframe>
+                                }
+                                else
+                                {
+                                    <!-- Fallback: Google Maps search link -->
+                                    <div class="map-fallback">
+                                        <div class="map-preview">
+                                            <svg class="map-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                            <p class="map-text">@car.Location</p>
+                                            <a href="https://www.google.com/maps/search/?api=1&query=@System.Web.HttpUtility.UrlEncode(car.Location)" 
+                                               target="_blank" 
+                                               class="map-link-btn">
+                                                <svg class="external-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                                </svg>
+                                                View on Google Maps
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="map-placeholder">
+                                <svg class="placeholder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"></path>
+                                </svg>
+                                <p>Location not available</p>
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -671,5 +704,23 @@
             "audi" => "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop&auto=format",
             _ => "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop&auto=format"
         };
+    }
+
+    private string GetGoogleMapsApiKey()
+    {
+        // In a production environment, this should be retrieved from configuration
+        // For demo purposes, we'll use a placeholder that will show the location as text
+        // To use this properly, you need to:
+        // 1. Get a Google Maps API key from Google Cloud Console
+        // 2. Enable the Maps Embed API
+        // 3. Store the key in appsettings.json or environment variables
+        // 4. Inject IConfiguration and retrieve the key
+        return "YOUR_GOOGLE_MAPS_API_KEY";
+    }
+
+    private bool HasValidGoogleMapsApiKey()
+    {
+        var apiKey = GetGoogleMapsApiKey();
+        return !string.IsNullOrEmpty(apiKey) && apiKey != "YOUR_GOOGLE_MAPS_API_KEY";
     }
 }

@@ -779,7 +779,7 @@ body {
     }
 
     .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: var(--spacing-4);
     }
 
@@ -1044,7 +1044,7 @@ body {
 
 .specs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--spacing-4);
     padding: var(--spacing-6);
 }
@@ -1456,6 +1456,134 @@ body {
     margin-bottom: 0;
 }
 
+/* Location Map Card */
+.location-map-card {
+    background: var(--primary-white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    margin-bottom: var(--spacing-6);
+}
+
+.location-content {
+    padding: var(--spacing-6);
+}
+
+.location-info {
+    margin-bottom: var(--spacing-4);
+}
+
+.location-address {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--primary-black);
+    margin-bottom: var(--spacing-1);
+}
+
+.location-note {
+    font-size: var(--font-size-xs);
+    color: var(--gray-500);
+    margin: 0;
+}
+
+.location-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: var(--spacing-2);
+    color: var(--primary-blue);
+}
+
+.map-container {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.map-container iframe {
+    display: block;
+    width: 100%;
+}
+
+.map-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-8);
+    background: var(--gray-50);
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--gray-300);
+}
+
+.placeholder-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--gray-400);
+    margin-bottom: var(--spacing-3);
+}
+
+.map-placeholder p {
+    color: var(--gray-500);
+    font-size: var(--font-size-base);
+    margin: 0;
+}
+
+/* Map Fallback */
+.map-fallback {
+    height: 250px;
+    background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-50) 100%);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--gray-200);
+}
+
+.map-preview {
+    text-align: center;
+    padding: var(--spacing-6);
+}
+
+.map-icon {
+    width: 64px;
+    height: 64px;
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-4);
+}
+
+.map-text {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--primary-black);
+    margin: 0 0 var(--spacing-4) 0;
+}
+
+.map-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--primary-blue);
+    color: var(--primary-white);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.map-link-btn:hover {
+    background: var(--blue-700);
+    transform: translateY(-1px);
+    text-decoration: none;
+    color: var(--primary-white);
+}
+
+.external-icon {
+    width: 16px;
+    height: 16px;
+}
+
 /* Similar Cars Card */
 .similar-cars-card {
     background: var(--primary-white);
@@ -1606,7 +1734,7 @@ body {
     }
     
     .specs-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
     
     .spec-details-grid {
@@ -1671,7 +1799,7 @@ body {
     }
     
     .specs-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 

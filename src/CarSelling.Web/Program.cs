@@ -11,7 +11,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpClient<ICarListingApiService, CarListingApiService>(client =>
 {
     // Configure the API base address - make sure this matches your API port
-    client.BaseAddress = new Uri("https://localhost:7000/");
+    client.BaseAddress = new Uri("https://localhost:7014/");
 });
 
 var app = builder.Build();

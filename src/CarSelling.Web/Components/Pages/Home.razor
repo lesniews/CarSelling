@@ -432,7 +432,22 @@
         isLoading = true;
         try
         {
-            searchResults = await CarListingService.SearchCarsAsync(searchDto);
+            // Convert ExtendedCarListingSearchDto to CarListingSearchDto
+            var basicSearchDto = new CarListingSearchDto
+            {
+                Make = searchDto.Make,
+                Model = searchDto.Model,
+                YearFrom = searchDto.YearFrom,
+                YearTo = searchDto.YearTo,
+                PriceFrom = searchDto.PriceFrom,
+                PriceTo = searchDto.PriceTo,
+                FuelType = searchDto.FuelType,
+                Location = searchDto.Location,
+                Page = searchDto.Page,
+                PageSize = searchDto.PageSize
+            };
+
+            searchResults = await CarListingService.SearchCarsAsync(basicSearchDto);
             totalResults = searchResults.Count();
         }
         catch

@@ -432,9 +432,8 @@
         isLoading = true;
         try
         {
-            var result = await CarListingService.SearchCarListingsAsync(searchDto);
-            searchResults = result.Data ?? new List<CarListing>();
-            totalResults = result.TotalCount;
+            searchResults = await CarListingService.SearchCarsAsync(searchDto);
+            totalResults = searchResults.Count();
         }
         catch
         {

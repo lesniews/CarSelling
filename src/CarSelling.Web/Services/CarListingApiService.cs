@@ -53,12 +53,24 @@ public class CarListingApiService : ICarListingApiService
         queryParams.Add($"pageSize={search.PageSize}");
 
         var queryString = string.Join("&", queryParams);
-        var response = await _httpClient.GetAsync($"/api/carlistings?{queryString}");
+        var fullUrl = $"/api/carlistings?{queryString}";
+        Console.WriteLine($"API call URL: {_httpClient.BaseAddress}{fullUrl}");
+        
+        var response = await _httpClient.GetAsync(fullUrl);
+        Console.WriteLine($"API response status: {response.StatusCode}");
 
         if (response.IsSuccessStatusCode)
         {
             var json = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<IEnumerable<CarListing>>(json, _jsonOptions) ?? new List<CarListing>();
+            Console.WriteLine($"API response JSON length: {json.Length}");
+            var result = JsonSerializer.Deserialize<IEnumerable<CarListing>>(json, _jsonOptions) ?? new List<CarListing>();
+            Console.WriteLine($"Deserialized {result.Count()} cars");
+            return result;
+        }
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"API error response: {errorContent}");
         }
 
         return new List<CarListing>();

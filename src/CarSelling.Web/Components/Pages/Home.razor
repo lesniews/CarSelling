@@ -447,11 +447,14 @@
                 PageSize = searchDto.PageSize
             };
 
+            Console.WriteLine($"Searching with: Page={basicSearchDto.Page}, PageSize={basicSearchDto.PageSize}");
             searchResults = await CarListingService.SearchCarsAsync(basicSearchDto);
+            Console.WriteLine($"Search results count: {searchResults.Count()}");
             totalResults = searchResults.Count();
         }
-        catch
+        catch (Exception ex)
         {
+            Console.WriteLine($"Error searching cars: {ex.Message}");
             searchResults = new List<CarListing>();
             totalResults = 0;
         }

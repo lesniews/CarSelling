@@ -46,6 +46,14 @@ public class CarListingService : ICarListingService
 
     public async Task<IEnumerable<CarListing>> SearchListingsAsync(CarListingSearchDto search)
     {
+        Console.WriteLine($"API Service - SearchListingsAsync called with Page: {search.Page}, PageSize: {search.PageSize}");
+        
+        var totalCount = await _context.CarListings.CountAsync();
+        Console.WriteLine($"Total cars in database: {totalCount}");
+        
+        var activeCount = await _context.CarListings.CountAsync(c => c.IsActive);
+        Console.WriteLine($"Active cars in database: {activeCount}");
+        
         var query = _context.CarListings.Where(c => c.IsActive);
 
         if (!string.IsNullOrEmpty(search.Make))
@@ -72,11 +80,14 @@ public class CarListingService : ICarListingService
         if (!string.IsNullOrEmpty(search.Location))
             query = query.Where(c => c.Location.Contains(search.Location));
 
-        return await query
+        var result = await query
             .OrderByDescending(c => c.CreatedAt)
             .Skip((search.Page - 1) * search.PageSize)
             .Take(search.PageSize)
             .ToListAsync();
+            
+        Console.WriteLine($"Returning {result.Count} cars from search");
+        return result;
     }
 
     public async Task<CarListing?> GetListingByIdAsync(int id)

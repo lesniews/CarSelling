@@ -23,6 +23,14 @@ public class CarListingsController : ControllerBase
         return Ok(listings);
     }
 
+    [HttpGet("all")]
+    public async Task<ActionResult<IEnumerable<CarListing>>> GetAllCarListings()
+    {
+        var search = new CarListingSearchDto { Page = 1, PageSize = 100 };
+        var listings = await _carListingService.SearchListingsAsync(search);
+        return Ok(listings);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<CarListing>> GetCarListing(int id)
     {

@@ -1,5 +1,6 @@
 -- Sample Car Data for CarSelling Database
 -- This script inserts 15 comprehensive car listings with all model fields populated
+-- Fixed to match the actual database schema (removes auto-generated fields)
 
 -- Clear existing data (optional - uncomment if needed)
 -- DELETE FROM CarListings;
@@ -18,9 +19,8 @@ INSERT INTO CarListings (
     Images, VideoUrl, Has360View,
     Description, ContactEmail, ContactPhone,
     Location, City, State, ZipCode,
-    AvailableDate, TestDriveAvailable, ViewingAppointmentRequired,
-    IsActive, IsFeatured, UserId,
-    ViewCount, FavoriteCount
+    TestDriveAvailable, ViewingAppointmentRequired,
+    IsFeatured, UserId
 ) VALUES
 -- Car 1: Toyota Camry
 (
@@ -38,9 +38,8 @@ INSERT INTO CarListings (
     'Well-maintained 2022 Toyota Camry with low mileage. Single owner, garage kept, all maintenance records available. Perfect family sedan with excellent fuel economy.',
     'john.smith@email.com', '+1-555-0101',
     'San Francisco, CA', 'San Francisco', 'CA', '94102',
-    GETUTCDATE(), 1, 0,
-    1, 0, 'user1',
-    245, 12
+    1, 0,
+    0, 'user1'
 ),
 
 -- Car 2: Honda Accord Sport
@@ -59,9 +58,8 @@ INSERT INTO CarListings (
     'Sporty Honda Accord with rare manual transmission. Well maintained with minor cosmetic damage on rear bumper. Great for driving enthusiasts.',
     'dealer@acmeauto.com', '+1-555-0102',
     'Los Angeles, CA', 'Los Angeles', 'CA', '90210',
-    GETUTCDATE(), 1, 1,
-    1, 1, 'dealer1',
-    156, 8
+    1, 1,
+    1, 'dealer1'
 ),
 
 -- Car 3: Tesla Model 3
@@ -80,9 +78,8 @@ INSERT INTO CarListings (
     'Like-new Tesla Model 3 with latest software updates. Includes Enhanced Autopilot and free Supercharging. Perfect electric vehicle for daily commuting.',
     'sarah.wilson@email.com', '+1-555-0103',
     'Seattle, WA', 'Seattle', 'WA', '98101',
-    GETUTCDATE(), 1, 0,
-    1, 1, 'user2',
-    398, 25
+    1, 0,
+    1, 'user2'
 ),
 
 -- Car 4: BMW 3 Series
@@ -101,9 +98,8 @@ INSERT INTO CarListings (
     'Premium BMW 3 Series with xDrive all-wheel drive. Loaded with luxury features including heated seats, premium sound system, and advanced driver assistance.',
     'bmw.dealer@luxury.com', '+1-555-0104',
     'Austin, TX', 'Austin', 'TX', '78701',
-    GETUTCDATE(), 1, 1,
-    1, 1, 'dealer2',
-    189, 15
+    1, 1,
+    1, 'dealer2'
 ),
 
 -- Car 5: Mercedes-Benz C-Class
@@ -122,9 +118,8 @@ INSERT INTO CarListings (
     'Elegant Mercedes-Benz C300 with 4MATIC all-wheel drive. Well-maintained with complete service history. Perfect luxury sedan for daily driving.',
     'mercedes.owner@email.com', '+1-555-0105',
     'Miami, FL', 'Miami', 'FL', '33101',
-    GETUTCDATE(), 1, 0,
-    1, 0, 'user3',
-    134, 7
+    1, 0,
+    0, 'user3'
 ),
 
 -- Car 6: Audi A4 Premium
@@ -143,9 +138,8 @@ INSERT INTO CarListings (
     'Premium Audi A4 with Quattro all-wheel drive and Virtual Cockpit. Excellent condition with advanced technology features and superior build quality.',
     'audi.sales@premium.com', '+1-555-0106',
     'Denver, CO', 'Denver', 'CO', '80202',
-    GETUTCDATE(), 1, 1,
-    1, 1, 'dealer3',
-    276, 18
+    1, 1,
+    1, 'dealer3'
 ),
 
 -- Car 7: Ford F-150
@@ -164,9 +158,8 @@ INSERT INTO CarListings (
     'Powerful Ford F-150 with EcoBoost engine and 4WD capability. Great for work and recreation. Minor scratches on bed liner, otherwise excellent condition.',
     'truck.owner@email.com', '+1-555-0107',
     'Houston, TX', 'Houston', 'TX', '77002',
-    GETUTCDATE(), 1, 0,
-    1, 0, 'user4',
-    198, 11
+    1, 0,
+    0, 'user4'
 ),
 
 -- Car 8: Chevrolet Tahoe
@@ -185,9 +178,8 @@ INSERT INTO CarListings (
     'Spacious Chevrolet Tahoe perfect for large families. Features third-row seating, powerful V8 engine, and excellent towing capacity.',
     'chevy.dealer@auto.com', '+1-555-0108',
     'Phoenix, AZ', 'Phoenix', 'AZ', '85001',
-    GETUTCDATE(), 1, 1,
-    1, 0, 'dealer4',
-    167, 9
+    1, 1,
+    0, 'dealer4'
 ),
 
 -- Car 9: Subaru Outback
@@ -206,9 +198,8 @@ INSERT INTO CarListings (
     'Adventure-ready Subaru Outback with turbo engine and standard AWD. Perfect for outdoor enthusiasts with excellent ground clearance and cargo space.',
     'outdoor.lover@email.com', '+1-555-0109',
     'Portland, OR', 'Portland', 'OR', '97201',
-    GETUTCDATE(), 1, 0,
-    1, 1, 'user5',
-    223, 14
+    1, 0,
+    1, 'user5'
 ),
 
 -- Car 10: Mazda CX-5
@@ -227,9 +218,8 @@ INSERT INTO CarListings (
     'Premium Mazda CX-5 with turbo engine and luxurious interior. Excellent build quality with advanced safety features and refined driving experience.',
     'mazda.sales@dealer.com', '+1-555-0110',
     'Atlanta, GA', 'Atlanta', 'GA', '30301',
-    GETUTCDATE(), 1, 1,
-    1, 1, 'dealer5',
-    145, 6
+    1, 1,
+    1, 'dealer5'
 ),
 
 -- Car 11: Jeep Wrangler
@@ -248,9 +238,8 @@ INSERT INTO CarListings (
     'Iconic Jeep Wrangler with removable doors and roof. Perfect for off-road adventures with manual transmission and excellent 4x4 capability.',
     'jeep.enthusiast@email.com', '+1-555-0111',
     'Salt Lake City, UT', 'Salt Lake City', 'UT', '84101',
-    GETUTCDATE(), 1, 0,
-    1, 1, 'user6',
-    312, 22
+    1, 0,
+    1, 'user6'
 ),
 
 -- Car 12: Hyundai Elantra
@@ -269,9 +258,8 @@ INSERT INTO CarListings (
     'Brand new Hyundai Elantra with excellent fuel economy and modern features. Perfect first car or daily commuter with comprehensive warranty coverage.',
     'hyundai.dealer@auto.com', '+1-555-0112',
     'Las Vegas, NV', 'Las Vegas', 'NV', '89101',
-    GETUTCDATE(), 1, 1,
-    1, 0, 'dealer6',
-    89, 3
+    1, 1,
+    0, 'dealer6'
 ),
 
 -- Car 13: Volkswagen Golf GTI
@@ -290,9 +278,8 @@ INSERT INTO CarListings (
     'Fun-to-drive Volkswagen Golf GTI with manual transmission. Perfect hot hatch with excellent handling and practical everyday usability.',
     'vw.owner@email.com', '+1-555-0113',
     'Chicago, IL', 'Chicago', 'IL', '60601',
-    GETUTCDATE(), 1, 0,
-    1, 0, 'user7',
-    178, 10
+    1, 0,
+    0, 'user7'
 ),
 
 -- Car 14: Lexus RX 350
@@ -311,9 +298,8 @@ INSERT INTO CarListings (
     'Luxury Lexus RX 350 with F Sport package. Exceptional reliability and comfort with premium features and smooth V6 engine performance.',
     'lexus.sales@luxury.com', '+1-555-0114',
     'San Diego, CA', 'San Diego', 'CA', '92101',
-    GETUTCDATE(), 1, 1,
-    1, 1, 'dealer7',
-    234, 16
+    1, 1,
+    1, 'dealer7'
 ),
 
 -- Car 15: Porsche 911
@@ -332,9 +318,8 @@ INSERT INTO CarListings (
     'Iconic Porsche 911 Carrera S in classic Guards Red. Meticulously maintained with complete service history. A true drivers car with timeless design.',
     'porsche.collector@email.com', '+1-555-0115',
     'Beverly Hills, CA', 'Beverly Hills', 'CA', '90210',
-    GETUTCDATE(), 1, 1,
-    1, 1, 'user8',
-    567, 45
+    1, 1,
+    1, 'user8'
 );
 
 -- Verify the data was inserted

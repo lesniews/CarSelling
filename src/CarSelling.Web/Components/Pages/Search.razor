@@ -1,0 +1,217 @@
+﻿@page "/search"
+@inject ICarListingApiService CarListingService
+@inject NavigationManager Navigation
+@using CarSelling.Shared.Models
+@using CarSelling.Shared.DTOs
+@using CarSelling.Web.Services
+
+<PageTitle>Search Cars - CarSelling</PageTitle>
+
+<div class="container">
+    <h1 class="mb-4">Search Cars</h1>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Filters</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Make</label>
+                        <input @bind="searchDto.Make" @onblur="SearchCars" class="form-control" placeholder="Any Make" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Model</label>
+                        <input @bind="searchDto.Model" @onblur="SearchCars" class="form-control" placeholder="Any Model" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Year Range</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input @bind="searchDto.YearFrom" @onblur="SearchCars" type="number" class="form-control" placeholder="From" />
+                            </div>
+                            <div class="col-6">
+                                <input @bind="searchDto.YearTo" @onblur="SearchCars" type="number" class="form-control" placeholder="To" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Price Range ($)</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input @bind="searchDto.PriceFrom" @onblur="SearchCars" type="number" class="form-control" placeholder="Min" />
+                            </div>
+                            <div class="col-6">
+                                <input @bind="searchDto.PriceTo" @onblur="SearchCars" type="number" class="form-control" placeholder="Max" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Fuel Type</label>
+                        <select @bind="searchDto.FuelType" @bind:after="SearchCars" class="form-control">
+                            <option value="">Any Fuel Type</option>
+                            <option value="Gasoline">Gasoline</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="Electric">Electric</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input @bind="searchDto.Location" @onblur="SearchCars" class="form-control" placeholder="Any Location" />
+                    </div>
+
+                    <button @onclick="ClearFilters" class="btn btn-outline-secondary w-100">Clear Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            @if (isLoading)
+            {
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p>Searching for cars...</p>
+                </div>
+            }
+            else if (searchResults != null && searchResults.Any())
+            {
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <p class="mb-0">Found @searchResults.Count() cars</p>
+                    <div>
+                        <select @bind="searchDto.PageSize" @bind:after="SearchCars" class="form-select form-select-sm">
+                            <option value="10">10 per page</option>
+                            <option value="20">20 per page</option>
+                            <option value="50">50 per page</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    @foreach (var car in searchResults)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">@car.Title</h5>
+                                    <p class="card-text">@car.Year @car.Make @car.Model</p>
+                                    <p class="price h5 text-success">$@car.Price.ToString("N0")</p>
+                                    <div class="row text-muted small mb-2">
+                                        <div class="col-6">🛣️ @car.Mileage.ToString("N0") miles</div>
+                                        <div class="col-6">📍 @car.Location</div>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(car.FuelType))
+                                    {
+                                        <div class="mb-2">
+                                            <span class="badge bg-secondary">@car.FuelType</span>
+                                            @if (!string.IsNullOrEmpty(car.Transmission))
+                                            {
+                                                <span class="badge bg-secondary ms-1">@car.Transmission</span>
+                                            }
+                                        </div>
+                                    }
+                                    <div class="mt-auto">
+                                        <a href="/car/@car.Id" class="btn btn-primary w-100">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Search results pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(searchDto.Page <= 1 ? "disabled" : "")">
+                            <button class="page-link" @onclick="() => ChangePage(searchDto.Page - 1)" disabled="@(searchDto.Page <= 1)">
+                                Previous
+                            </button>
+                        </li>
+
+                        @for (int i = Math.Max(1, searchDto.Page - 2); i <= Math.Min(searchDto.Page + 2, totalPages); i++)
+                        {
+                            <li class="page-item @(i == searchDto.Page ? "active" : "")">
+                                <button class="page-link" @onclick="() => ChangePage(i)">@i</button>
+                            </li>
+                        }
+
+                        <li class="page-item @(searchDto.Page >= totalPages ? "disabled" : "")">
+                            <button class="page-link" @onclick="() => ChangePage(searchDto.Page + 1)" disabled="@(searchDto.Page >= totalPages)">
+                                Next
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">No cars found</h4>
+                    <p>Try adjusting your search filters or <a href="/create-listing" class="alert-link">list your car for sale</a>.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private CarListingSearchDto searchDto = new();
+    private IEnumerable<CarListing>? searchResults;
+    private bool isLoading = true;
+    private int totalPages = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Parse query parameters
+        var uri = new Uri(Navigation.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        searchDto.Make = query["make"];
+        searchDto.Model = query["model"];
+        if (decimal.TryParse(query["maxPrice"], out var maxPrice))
+            searchDto.PriceTo = maxPrice;
+        searchDto.Location = query["location"];
+
+        await SearchCars();
+    }
+
+    private async Task SearchCars()
+    {
+        isLoading = true;
+        try
+        {
+            searchResults = await CarListingService.SearchCarsAsync(searchDto);
+            // Calculate total pages based on results (simplified - in real app, API should return total count)
+            totalPages = Math.Max(1, (int)Math.Ceiling(searchResults.Count() / (double)searchDto.PageSize));
+        }
+        catch
+        {
+            // Log error in production - for now just set empty list
+            searchResults = new List<CarListing>();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ChangePage(int page)
+    {
+        searchDto.Page = page;
+        await SearchCars();
+    }
+
+    private async Task ClearFilters()
+    {
+        searchDto = new CarListingSearchDto { Page = 1, PageSize = searchDto.PageSize };
+        await SearchCars();
+    }
+}

@@ -1,0 +1,15 @@
+/* Import CarMarket styles */
+@import url('carmarket.css');
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Your existing app.css styles can go here */
+/* These will be loaded after the CarMarket styles */
+
+/* Custom overrides or additional styles */
+html, body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Add any project-specific customizations below */

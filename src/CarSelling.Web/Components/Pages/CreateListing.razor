@@ -1,0 +1,170 @@
+﻿@page "/create-listing"
+@inject ICarListingApiService CarListingService
+@inject NavigationManager Navigation
+@using CarSelling.Shared.DTOs
+@using CarSelling.Web.Services
+
+<PageTitle>Sell Your Car - CarSelling</PageTitle>
+
+<div class="container">
+    <h1 class="mb-4">Create Car Listing</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <EditForm Model="@createModel" OnValidSubmit="@HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="alert alert-danger" />
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Car Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Title *</label>
+                            <InputText @bind-Value="createModel.Title" class="form-control" placeholder="e.g., 2020 Honda Civic LX - Low Miles, Great Condition" />
+                            <ValidationMessage For="@(() => createModel.Title)" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Make *</label>
+                                <InputText @bind-Value="createModel.Make" class="form-control" placeholder="Honda" />
+                                <ValidationMessage For="@(() => createModel.Make)" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Model *</label>
+                                <InputText @bind-Value="createModel.Model" class="form-control" placeholder="Civic" />
+                                <ValidationMessage For="@(() => createModel.Model)" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Year *</label>
+                                <InputNumber @bind-Value="createModel.Year" class="form-control" />
+                                <ValidationMessage For="@(() => createModel.Year)" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Price ($) *</label>
+                                <InputNumber @bind-Value="createModel.Price" class="form-control" />
+                                <ValidationMessage For="@(() => createModel.Price)" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Mileage *</label>
+                                <InputNumber @bind-Value="createModel.Mileage" class="form-control" />
+                                <ValidationMessage For="@(() => createModel.Mileage)" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fuel Type</label>
+                                <InputSelect @bind-Value="createModel.FuelType" class="form-control">
+                                    <option value="">Select Fuel Type</option>
+                                    <option value="Gasoline">Gasoline</option>
+                                    <option value="Diesel">Diesel</option>
+                                    <option value="Hybrid">Hybrid</option>
+                                    <option value="Electric">Electric</option>
+                                </InputSelect>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Transmission</label>
+                                <InputSelect @bind-Value="createModel.Transmission" class="form-control">
+                                    <option value="">Select Transmission</option>
+                                    <option value="Manual">Manual</option>
+                                    <option value="Automatic">Automatic</option>
+                                    <option value="CVT">CVT</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <InputTextArea @bind-Value="createModel.Description" class="form-control" rows="5" 
+                                         placeholder="Describe your car's condition, features, maintenance history, etc." />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Contact Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Contact Email *</label>
+                                <InputText @bind-Value="createModel.ContactEmail" class="form-control" type="email" />
+                                <ValidationMessage For="@(() => createModel.ContactEmail)" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Contact Phone</label>
+                                <InputText @bind-Value="createModel.ContactPhone" class="form-control" placeholder="(555) 123-4567" />
+                                <ValidationMessage For="@(() => createModel.ContactPhone)" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <InputText @bind-Value="createModel.Location" class="form-control" placeholder="City, State" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg me-2" disabled="@isSubmitting">
+                        @if (isSubmitting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        }
+                        Create Listing
+                    </button>
+                    <a href="/" class="btn btn-secondary btn-lg">Cancel</a>
+                </div>
+            </EditForm>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Tips for a Great Listing</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">📝 <strong>Clear Title:</strong> Include year, make, model, and key features</li>
+                        <li class="mb-2">💰 <strong>Fair Price:</strong> Research similar cars to price competitively</li>
+                        <li class="mb-2">📋 <strong>Detailed Description:</strong> Include condition, maintenance, and features</li>
+                        <li class="mb-2">📞 <strong>Contact Info:</strong> Provide reliable ways for buyers to reach you</li>
+                        <li class="mb-2">📍 <strong>Location:</strong> Help buyers find you easily</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private CreateCarListingDto createModel = new();
+    private bool isSubmitting = false;
+
+    private async Task HandleValidSubmit()
+    {
+        isSubmitting = true;
+        try
+        {
+            var listing = await CarListingService.CreateCarListingAsync(createModel);
+            Navigation.NavigateTo($"/car/{listing.Id}");
+        }
+        catch (Exception ex)
+        {
+            // In production, show user-friendly error message
+            // For now, just log to console
+            Console.WriteLine($"Error creating listing: {ex.Message}");
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

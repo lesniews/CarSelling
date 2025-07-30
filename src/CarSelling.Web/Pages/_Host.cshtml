@@ -1,0 +1,9 @@
+@page "/"
+@namespace CarSelling.Web.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using CarSelling.Web.Components
+@{
+    Layout = "_Layout";
+}
+
+<component type="typeof(App)" render-mode="ServerPrerendered" />

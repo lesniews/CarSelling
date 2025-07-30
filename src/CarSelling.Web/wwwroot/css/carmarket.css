@@ -111,22 +111,7 @@ body {
     font-weight: 700;
 }
 
-.nav-menu {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-.nav-link {
-    color: var(--gray-700);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s ease;
-}
-
-    .nav-link:hover {
-        color: var(--primary-black);
-    }
+/* Navigation menu removed - keeping header clean */
 
 .header-actions {
     display: flex;
@@ -134,40 +119,7 @@ body {
     gap: 1rem;
 }
 
-.search-box {
-    display: flex;
-    align-items: center;
-    background: var(--gray-100);
-    border-radius: var(--radius-lg);
-    padding: 0 12px;
-    min-width: 250px;
-}
-
-.search-input {
-    border: none;
-    background: none;
-    padding: 10px 8px;
-    flex: 1;
-    font-size: var(--font-size-sm);
-    color: var(--gray-900);
-}
-
-    .search-input:focus {
-        outline: none;
-    }
-
-    .search-input::placeholder {
-        color: var(--gray-500);
-    }
-
-.search-btn {
-    border: none;
-    background: none;
-    padding: 8px;
-    cursor: pointer;
-    font-size: var(--font-size-base);
-    color: var(--gray-600);
-}
+/* Search box removed - keeping header clean */
 
 .sell-btn {
     background: var(--primary-black);
@@ -762,13 +714,7 @@ body {
         gap: 1rem;
     }
 
-    .nav-menu {
-        display: none;
-    }
-
-    .search-box {
-        min-width: 200px;
-    }
+    /* Responsive nav and search removed */
 
     .sell-btn {
         display: none;
@@ -2351,9 +2297,7 @@ body {
 }
 
 @media (max-width: 480px) {
-    .search-box {
-        min-width: 150px;
-    }
+    /* Search box styling removed */
 
     .logo {
         font-size: var(--font-size-lg);

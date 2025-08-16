@@ -517,6 +517,405 @@ public static class CarModels
         new CarModel { Id = 146, Name = "Panamera", CarBrandId = 4, Category = "Sedan", StartYear = 2009 },
         new CarModel { Id = 147, Name = "718 Boxster", CarBrandId = 4, Category = "Convertible", StartYear = 1996 },
         new CarModel { Id = 148, Name = "718 Cayman", CarBrandId = 4, Category = "Coupe", StartYear = 2005 },
-        new CarModel { Id = 149, Name = "Taycan", CarBrandId = 4, Category = "Sedan", StartYear = 2019 }
+        new CarModel { Id = 149, Name = "Taycan", CarBrandId = 4, Category = "Sedan", StartYear = 2019 },
+
+        // Acura Models (Brand ID: 26)
+        new CarModel { Id = 150, Name = "TLX", CarBrandId = 26, Category = "Sedan", StartYear = 2014 },
+        new CarModel { Id = 151, Name = "ILX", CarBrandId = 26, Category = "Sedan", StartYear = 2012 },
+        new CarModel { Id = 152, Name = "RDX", CarBrandId = 26, Category = "SUV", StartYear = 2006 },
+        new CarModel { Id = 153, Name = "MDX", CarBrandId = 26, Category = "SUV", StartYear = 2000 },
+        new CarModel { Id = 154, Name = "NSX", CarBrandId = 26, Category = "Coupe", StartYear = 1990 },
+        new CarModel { Id = 155, Name = "Integra", CarBrandId = 26, Category = "Sedan", StartYear = 2021 },
+
+        // Alfa Romeo Models (Brand ID: 6)
+        new CarModel { Id = 156, Name = "Giulia", CarBrandId = 6, Category = "Sedan", StartYear = 2016 },
+        new CarModel { Id = 157, Name = "Stelvio", CarBrandId = 6, Category = "SUV", StartYear = 2016 },
+        new CarModel { Id = 158, Name = "4C", CarBrandId = 6, Category = "Coupe", StartYear = 2013 },
+        new CarModel { Id = 159, Name = "Tonale", CarBrandId = 6, Category = "SUV", StartYear = 2022 },
+
+        // Aston Martin Models (Brand ID: 7)
+        new CarModel { Id = 160, Name = "DB11", CarBrandId = 7, Category = "Coupe", StartYear = 2016 },
+        new CarModel { Id = 161, Name = "Vantage", CarBrandId = 7, Category = "Coupe", StartYear = 2005 },
+        new CarModel { Id = 162, Name = "DBS", CarBrandId = 7, Category = "Coupe", StartYear = 2007 },
+        new CarModel { Id = 163, Name = "DBX", CarBrandId = 7, Category = "SUV", StartYear = 2020 },
+
+        // Bentley Models (Brand ID: 8)
+        new CarModel { Id = 164, Name = "Continental GT", CarBrandId = 8, Category = "Coupe", StartYear = 2003 },
+        new CarModel { Id = 165, Name = "Bentayga", CarBrandId = 8, Category = "SUV", StartYear = 2015 },
+        new CarModel { Id = 166, Name = "Flying Spur", CarBrandId = 8, Category = "Sedan", StartYear = 2005 },
+        new CarModel { Id = 167, Name = "Mulsanne", CarBrandId = 8, Category = "Sedan", StartYear = 2010, EndYear = 2020 },
+
+        // Bugatti Models (Brand ID: 9)
+        new CarModel { Id = 168, Name = "Chiron", CarBrandId = 9, Category = "Coupe", StartYear = 2016 },
+        new CarModel { Id = 169, Name = "Veyron", CarBrandId = 9, Category = "Coupe", StartYear = 2005, EndYear = 2015 },
+        new CarModel { Id = 170, Name = "Divo", CarBrandId = 9, Category = "Coupe", StartYear = 2018 },
+
+        // Buick Models (Brand ID: 10)
+        new CarModel { Id = 171, Name = "Enclave", CarBrandId = 10, Category = "SUV", StartYear = 2007 },
+        new CarModel { Id = 172, Name = "Encore", CarBrandId = 10, Category = "SUV", StartYear = 2012 },
+        new CarModel { Id = 173, Name = "Envision", CarBrandId = 10, Category = "SUV", StartYear = 2015 },
+        new CarModel { Id = 174, Name = "Lacrosse", CarBrandId = 10, Category = "Sedan", StartYear = 2004 },
+        new CarModel { Id = 175, Name = "Regal", CarBrandId = 10, Category = "Sedan", StartYear = 1973 },
+
+        // Cadillac Models (Brand ID: 11)
+        new CarModel { Id = 176, Name = "Escalade", CarBrandId = 11, Category = "SUV", StartYear = 1998 },
+        new CarModel { Id = 177, Name = "XT5", CarBrandId = 11, Category = "SUV", StartYear = 2016 },
+        new CarModel { Id = 178, Name = "XT6", CarBrandId = 11, Category = "SUV", StartYear = 2019 },
+        new CarModel { Id = 179, Name = "CT5", CarBrandId = 11, Category = "Sedan", StartYear = 2019 },
+        new CarModel { Id = 180, Name = "CT4", CarBrandId = 11, Category = "Sedan", StartYear = 2019 },
+        new CarModel { Id = 181, Name = "Lyriq", CarBrandId = 11, Category = "SUV", StartYear = 2022 },
+
+        // Chevrolet Models (Brand ID: 12)
+        new CarModel { Id = 182, Name = "Silverado", CarBrandId = 12, Category = "Truck", StartYear = 1998 },
+        new CarModel { Id = 183, Name = "Tahoe", CarBrandId = 12, Category = "SUV", StartYear = 1994 },
+        new CarModel { Id = 184, Name = "Suburban", CarBrandId = 12, Category = "SUV", StartYear = 1935 },
+        new CarModel { Id = 185, Name = "Equinox", CarBrandId = 12, Category = "SUV", StartYear = 2004 },
+        new CarModel { Id = 186, Name = "Traverse", CarBrandId = 12, Category = "SUV", StartYear = 2008 },
+        new CarModel { Id = 187, Name = "Malibu", CarBrandId = 12, Category = "Sedan", StartYear = 1964 },
+        new CarModel { Id = 188, Name = "Camaro", CarBrandId = 12, Category = "Coupe", StartYear = 1966 },
+        new CarModel { Id = 189, Name = "Corvette", CarBrandId = 12, Category = "Coupe", StartYear = 1953 },
+        new CarModel { Id = 190, Name = "Blazer", CarBrandId = 12, Category = "SUV", StartYear = 1969 },
+
+        // Chrysler Models (Brand ID: 13)
+        new CarModel { Id = 191, Name = "300", CarBrandId = 13, Category = "Sedan", StartYear = 2004 },
+        new CarModel { Id = 192, Name = "Pacifica", CarBrandId = 13, Category = "Van", StartYear = 2016 },
+        new CarModel { Id = 193, Name = "Voyager", CarBrandId = 13, Category = "Van", StartYear = 2019 },
+
+        // Dodge Models (Brand ID: 14)
+        new CarModel { Id = 194, Name = "Charger", CarBrandId = 14, Category = "Sedan", StartYear = 1966 },
+        new CarModel { Id = 195, Name = "Challenger", CarBrandId = 14, Category = "Coupe", StartYear = 1969 },
+        new CarModel { Id = 196, Name = "Durango", CarBrandId = 14, Category = "SUV", StartYear = 1997 },
+        new CarModel { Id = 197, Name = "Journey", CarBrandId = 14, Category = "SUV", StartYear = 2008, EndYear = 2020 },
+        new CarModel { Id = 198, Name = "Grand Caravan", CarBrandId = 14, Category = "Van", StartYear = 1983, EndYear = 2020 },
+
+        // Ferrari Models (Brand ID: 15)
+        new CarModel { Id = 199, Name = "488", CarBrandId = 15, Category = "Coupe", StartYear = 2015, EndYear = 2019 },
+        new CarModel { Id = 200, Name = "F8 Tributo", CarBrandId = 15, Category = "Coupe", StartYear = 2019 },
+        new CarModel { Id = 201, Name = "SF90 Stradale", CarBrandId = 15, Category = "Coupe", StartYear = 2019 },
+        new CarModel { Id = 202, Name = "Roma", CarBrandId = 15, Category = "Coupe", StartYear = 2020 },
+        new CarModel { Id = 203, Name = "Portofino", CarBrandId = 15, Category = "Convertible", StartYear = 2017 },
+        new CarModel { Id = 204, Name = "812 Superfast", CarBrandId = 15, Category = "Coupe", StartYear = 2017 },
+
+        // Fiat Models (Brand ID: 17)
+        new CarModel { Id = 205, Name = "500", CarBrandId = 17, Category = "Hatchback", StartYear = 2007 },
+        new CarModel { Id = 206, Name = "500X", CarBrandId = 17, Category = "SUV", StartYear = 2014 },
+        new CarModel { Id = 207, Name = "500L", CarBrandId = 17, Category = "Hatchback", StartYear = 2012 },
+        new CarModel { Id = 208, Name = "124 Spider", CarBrandId = 17, Category = "Convertible", StartYear = 2016 },
+
+        // Ford Models (Brand ID: 18)
+        new CarModel { Id = 209, Name = "F-150", CarBrandId = 18, Category = "Truck", StartYear = 1975 },
+        new CarModel { Id = 210, Name = "Explorer", CarBrandId = 18, Category = "SUV", StartYear = 1990 },
+        new CarModel { Id = 211, Name = "Escape", CarBrandId = 18, Category = "SUV", StartYear = 2000 },
+        new CarModel { Id = 212, Name = "Edge", CarBrandId = 18, Category = "SUV", StartYear = 2006 },
+        new CarModel { Id = 213, Name = "Expedition", CarBrandId = 18, Category = "SUV", StartYear = 1996 },
+        new CarModel { Id = 214, Name = "Mustang", CarBrandId = 18, Category = "Coupe", StartYear = 1964 },
+        new CarModel { Id = 215, Name = "Bronco", CarBrandId = 18, Category = "SUV", StartYear = 1965 },
+        new CarModel { Id = 216, Name = "Ranger", CarBrandId = 18, Category = "Truck", StartYear = 1982 },
+        new CarModel { Id = 217, Name = "Fusion", CarBrandId = 18, Category = "Sedan", StartYear = 2005, EndYear = 2020 },
+
+        // Genesis Models (Brand ID: 20)
+        new CarModel { Id = 218, Name = "G90", CarBrandId = 20, Category = "Sedan", StartYear = 2016 },
+        new CarModel { Id = 219, Name = "G80", CarBrandId = 20, Category = "Sedan", StartYear = 2016 },
+        new CarModel { Id = 220, Name = "G70", CarBrandId = 20, Category = "Sedan", StartYear = 2017 },
+        new CarModel { Id = 221, Name = "GV70", CarBrandId = 20, Category = "SUV", StartYear = 2021 },
+        new CarModel { Id = 222, Name = "GV80", CarBrandId = 20, Category = "SUV", StartYear = 2020 },
+
+        // GMC Models (Brand ID: 21)
+        new CarModel { Id = 223, Name = "Sierra", CarBrandId = 21, Category = "Truck", StartYear = 1987 },
+        new CarModel { Id = 224, Name = "Yukon", CarBrandId = 21, Category = "SUV", StartYear = 1991 },
+        new CarModel { Id = 225, Name = "Acadia", CarBrandId = 21, Category = "SUV", StartYear = 2006 },
+        new CarModel { Id = 226, Name = "Terrain", CarBrandId = 21, Category = "SUV", StartYear = 2009 },
+        new CarModel { Id = 227, Name = "Canyon", CarBrandId = 21, Category = "Truck", StartYear = 2003 },
+        new CarModel { Id = 228, Name = "Savana", CarBrandId = 21, Category = "Van", StartYear = 1995 },
+
+        // Infiniti Models (Brand ID: 25)
+        new CarModel { Id = 229, Name = "Q50", CarBrandId = 25, Category = "Sedan", StartYear = 2013 },
+        new CarModel { Id = 230, Name = "Q60", CarBrandId = 25, Category = "Coupe", StartYear = 2016 },
+        new CarModel { Id = 231, Name = "QX50", CarBrandId = 25, Category = "SUV", StartYear = 2008 },
+        new CarModel { Id = 232, Name = "QX60", CarBrandId = 25, Category = "SUV", StartYear = 2012 },
+        new CarModel { Id = 233, Name = "QX80", CarBrandId = 25, Category = "SUV", StartYear = 2010 },
+
+        // Jaguar Models (Brand ID: 28)
+        new CarModel { Id = 234, Name = "XE", CarBrandId = 28, Category = "Sedan", StartYear = 2015 },
+        new CarModel { Id = 235, Name = "XF", CarBrandId = 28, Category = "Sedan", StartYear = 2007 },
+        new CarModel { Id = 236, Name = "XJ", CarBrandId = 28, Category = "Sedan", StartYear = 1968, EndYear = 2019 },
+        new CarModel { Id = 237, Name = "F-PACE", CarBrandId = 28, Category = "SUV", StartYear = 2015 },
+        new CarModel { Id = 238, Name = "E-PACE", CarBrandId = 28, Category = "SUV", StartYear = 2017 },
+        new CarModel { Id = 239, Name = "I-PACE", CarBrandId = 28, Category = "SUV", StartYear = 2018 },
+        new CarModel { Id = 240, Name = "F-TYPE", CarBrandId = 28, Category = "Coupe", StartYear = 2013 },
+
+        // Lamborghini Models (Brand ID: 29)
+        new CarModel { Id = 241, Name = "Huracán", CarBrandId = 29, Category = "Coupe", StartYear = 2014 },
+        new CarModel { Id = 242, Name = "Aventador", CarBrandId = 29, Category = "Coupe", StartYear = 2011 },
+        new CarModel { Id = 243, Name = "Urus", CarBrandId = 29, Category = "SUV", StartYear = 2017 },
+        new CarModel { Id = 244, Name = "Gallardo", CarBrandId = 29, Category = "Coupe", StartYear = 2003, EndYear = 2013 },
+
+        // Land Rover Models (Brand ID: 32)
+        new CarModel { Id = 245, Name = "Range Rover", CarBrandId = 32, Category = "SUV", StartYear = 1970 },
+        new CarModel { Id = 246, Name = "Range Rover Sport", CarBrandId = 32, Category = "SUV", StartYear = 2005 },
+        new CarModel { Id = 247, Name = "Range Rover Evoque", CarBrandId = 32, Category = "SUV", StartYear = 2011 },
+        new CarModel { Id = 248, Name = "Discovery", CarBrandId = 32, Category = "SUV", StartYear = 1989 },
+        new CarModel { Id = 249, Name = "Discovery Sport", CarBrandId = 32, Category = "SUV", StartYear = 2014 },
+        new CarModel { Id = 250, Name = "Defender", CarBrandId = 32, Category = "SUV", StartYear = 1983 },
+
+        // Lincoln Models (Brand ID: 33)
+        new CarModel { Id = 251, Name = "Navigator", CarBrandId = 33, Category = "SUV", StartYear = 1997 },
+        new CarModel { Id = 252, Name = "Aviator", CarBrandId = 33, Category = "SUV", StartYear = 2019 },
+        new CarModel { Id = 253, Name = "Corsair", CarBrandId = 33, Category = "SUV", StartYear = 2019 },
+        new CarModel { Id = 254, Name = "Nautilus", CarBrandId = 33, Category = "SUV", StartYear = 2015 },
+        new CarModel { Id = 255, Name = "Continental", CarBrandId = 33, Category = "Sedan", StartYear = 1939 },
+
+        // Lotus Models (Brand ID: 34)
+        new CarModel { Id = 256, Name = "Evora", CarBrandId = 34, Category = "Coupe", StartYear = 2009 },
+        new CarModel { Id = 257, Name = "Elise", CarBrandId = 34, Category = "Convertible", StartYear = 1996, EndYear = 2021 },
+        new CarModel { Id = 258, Name = "Exige", CarBrandId = 34, Category = "Coupe", StartYear = 2000, EndYear = 2021 },
+        new CarModel { Id = 259, Name = "Emira", CarBrandId = 34, Category = "Coupe", StartYear = 2021 },
+
+        // Maserati Models (Brand ID: 35)
+        new CarModel { Id = 260, Name = "Ghibli", CarBrandId = 35, Category = "Sedan", StartYear = 2013 },
+        new CarModel { Id = 261, Name = "Quattroporte", CarBrandId = 35, Category = "Sedan", StartYear = 2003 },
+        new CarModel { Id = 262, Name = "Levante", CarBrandId = 35, Category = "SUV", StartYear = 2016 },
+        new CarModel { Id = 263, Name = "GranTurismo", CarBrandId = 35, Category = "Coupe", StartYear = 2007 },
+
+        // McLaren Models (Brand ID: 36)
+        new CarModel { Id = 264, Name = "720S", CarBrandId = 36, Category = "Coupe", StartYear = 2017 },
+        new CarModel { Id = 265, Name = "570S", CarBrandId = 36, Category = "Coupe", StartYear = 2015, EndYear = 2021 },
+        new CarModel { Id = 266, Name = "600LT", CarBrandId = 36, Category = "Coupe", StartYear = 2018, EndYear = 2020 },
+        new CarModel { Id = 267, Name = "GT", CarBrandId = 36, Category = "Coupe", StartYear = 2019 },
+
+        // Mini Models (Brand ID: 37)
+        new CarModel { Id = 268, Name = "Cooper", CarBrandId = 37, Category = "Hatchback", StartYear = 2001 },
+        new CarModel { Id = 269, Name = "Countryman", CarBrandId = 37, Category = "SUV", StartYear = 2010 },
+        new CarModel { Id = 270, Name = "Clubman", CarBrandId = 37, Category = "Hatchback", StartYear = 2007 },
+        new CarModel { Id = 271, Name = "Convertible", CarBrandId = 37, Category = "Convertible", StartYear = 2004 },
+
+        // Mitsubishi Models (Brand ID: 38)
+        new CarModel { Id = 272, Name = "Outlander", CarBrandId = 38, Category = "SUV", StartYear = 2001 },
+        new CarModel { Id = 273, Name = "Eclipse Cross", CarBrandId = 38, Category = "SUV", StartYear = 2017 },
+        new CarModel { Id = 274, Name = "Mirage", CarBrandId = 38, Category = "Hatchback", StartYear = 1978 },
+        new CarModel { Id = 275, Name = "Lancer", CarBrandId = 38, Category = "Sedan", StartYear = 1973, EndYear = 2017 },
+
+        // Ram Models (Brand ID: 39)
+        new CarModel { Id = 276, Name = "1500", CarBrandId = 39, Category = "Truck", StartYear = 2010 },
+        new CarModel { Id = 277, Name = "2500", CarBrandId = 39, Category = "Truck", StartYear = 2010 },
+        new CarModel { Id = 278, Name = "3500", CarBrandId = 39, Category = "Truck", StartYear = 2010 },
+        new CarModel { Id = 279, Name = "ProMaster", CarBrandId = 39, Category = "Van", StartYear = 2013 },
+
+        // Rolls-Royce Models (Brand ID: 40)
+        new CarModel { Id = 280, Name = "Phantom", CarBrandId = 40, Category = "Sedan", StartYear = 2003 },
+        new CarModel { Id = 281, Name = "Ghost", CarBrandId = 40, Category = "Sedan", StartYear = 2009 },
+        new CarModel { Id = 282, Name = "Wraith", CarBrandId = 40, Category = "Coupe", StartYear = 2013 },
+        new CarModel { Id = 283, Name = "Dawn", CarBrandId = 40, Category = "Convertible", StartYear = 2015 },
+        new CarModel { Id = 284, Name = "Cullinan", CarBrandId = 40, Category = "SUV", StartYear = 2018 },
+
+        // Smart Models (Brand ID: 41)
+        new CarModel { Id = 285, Name = "fortwo", CarBrandId = 41, Category = "Hatchback", StartYear = 1998 },
+        new CarModel { Id = 286, Name = "forfour", CarBrandId = 41, Category = "Hatchback", StartYear = 2004 },
+
+        // Volvo Models (Brand ID: 42)
+        new CarModel { Id = 287, Name = "XC90", CarBrandId = 42, Category = "SUV", StartYear = 2002 },
+        new CarModel { Id = 288, Name = "XC60", CarBrandId = 42, Category = "SUV", StartYear = 2008 },
+        new CarModel { Id = 289, Name = "XC40", CarBrandId = 42, Category = "SUV", StartYear = 2017 },
+        new CarModel { Id = 290, Name = "S90", CarBrandId = 42, Category = "Sedan", StartYear = 2016 },
+        new CarModel { Id = 291, Name = "S60", CarBrandId = 42, Category = "Sedan", StartYear = 2000 },
+        new CarModel { Id = 292, Name = "V90", CarBrandId = 42, Category = "Wagon", StartYear = 2016 },
+        new CarModel { Id = 293, Name = "V60", CarBrandId = 42, Category = "Wagon", StartYear = 2010 },
+
+        // Additional popular international brands
+        // Dacia Models (Brand ID: 43)
+        new CarModel { Id = 294, Name = "Sandero", CarBrandId = 43, Category = "Hatchback", StartYear = 2007 },
+        new CarModel { Id = 295, Name = "Duster", CarBrandId = 43, Category = "SUV", StartYear = 2009 },
+        new CarModel { Id = 296, Name = "Logan", CarBrandId = 43, Category = "Sedan", StartYear = 2004 },
+
+        // Lada Models (Brand ID: 44)
+        new CarModel { Id = 297, Name = "Vesta", CarBrandId = 44, Category = "Sedan", StartYear = 2015 },
+        new CarModel { Id = 298, Name = "Granta", CarBrandId = 44, Category = "Sedan", StartYear = 2011 },
+        new CarModel { Id = 299, Name = "Niva", CarBrandId = 44, Category = "SUV", StartYear = 1977 },
+
+        // Peugeot Models (Brand ID: 45)
+        new CarModel { Id = 300, Name = "208", CarBrandId = 45, Category = "Hatchback", StartYear = 2012 },
+        new CarModel { Id = 301, Name = "308", CarBrandId = 45, Category = "Hatchback", StartYear = 2007 },
+        new CarModel { Id = 302, Name = "3008", CarBrandId = 45, Category = "SUV", StartYear = 2008 },
+        new CarModel { Id = 303, Name = "5008", CarBrandId = 45, Category = "SUV", StartYear = 2009 },
+
+        // Renault Models (Brand ID: 46)
+        new CarModel { Id = 304, Name = "Clio", CarBrandId = 46, Category = "Hatchback", StartYear = 1990 },
+        new CarModel { Id = 305, Name = "Megane", CarBrandId = 46, Category = "Hatchback", StartYear = 1995 },
+        new CarModel { Id = 306, Name = "Captur", CarBrandId = 46, Category = "SUV", StartYear = 2013 },
+        new CarModel { Id = 307, Name = "Kadjar", CarBrandId = 46, Category = "SUV", StartYear = 2015 },
+
+        // Citroën Models (Brand ID: 47)
+        new CarModel { Id = 308, Name = "C3", CarBrandId = 47, Category = "Hatchback", StartYear = 2002 },
+        new CarModel { Id = 309, Name = "C4", CarBrandId = 47, Category = "Hatchback", StartYear = 2004 },
+        new CarModel { Id = 310, Name = "C5 Aircross", CarBrandId = 47, Category = "SUV", StartYear = 2017 },
+
+        // Skoda Models (Brand ID: 48)
+        new CarModel { Id = 311, Name = "Octavia", CarBrandId = 48, Category = "Sedan", StartYear = 1996 },
+        new CarModel { Id = 312, Name = "Superb", CarBrandId = 48, Category = "Sedan", StartYear = 2001 },
+        new CarModel { Id = 313, Name = "Kodiaq", CarBrandId = 48, Category = "SUV", StartYear = 2016 },
+        new CarModel { Id = 314, Name = "Karoq", CarBrandId = 48, Category = "SUV", StartYear = 2017 },
+
+        // SEAT Models (Brand ID: 49)
+        new CarModel { Id = 315, Name = "Leon", CarBrandId = 49, Category = "Hatchback", StartYear = 1999 },
+        new CarModel { Id = 316, Name = "Ibiza", CarBrandId = 49, Category = "Hatchback", StartYear = 1984 },
+        new CarModel { Id = 317, Name = "Ateca", CarBrandId = 49, Category = "SUV", StartYear = 2016 },
+
+        // Opel Models (Brand ID: 50)
+        new CarModel { Id = 318, Name = "Astra", CarBrandId = 50, Category = "Hatchback", StartYear = 1991 },
+        new CarModel { Id = 319, Name = "Corsa", CarBrandId = 50, Category = "Hatchback", StartYear = 1982 },
+        new CarModel { Id = 320, Name = "Crossland", CarBrandId = 50, Category = "SUV", StartYear = 2017 },
+
+        // Additional Asian brands
+        // Suzuki Models (Brand ID: 51)
+        new CarModel { Id = 321, Name = "Swift", CarBrandId = 51, Category = "Hatchback", StartYear = 1983 },
+        new CarModel { Id = 322, Name = "Vitara", CarBrandId = 51, Category = "SUV", StartYear = 1988 },
+        new CarModel { Id = 323, Name = "Jimny", CarBrandId = 51, Category = "SUV", StartYear = 1970 },
+
+        // Isuzu Models (Brand ID: 52)
+        new CarModel { Id = 324, Name = "D-Max", CarBrandId = 52, Category = "Truck", StartYear = 2002 },
+        new CarModel { Id = 325, Name = "MU-X", CarBrandId = 52, Category = "SUV", StartYear = 2013 },
+
+        // Great Wall Models (Brand ID: 53)
+        new CarModel { Id = 326, Name = "Wingle", CarBrandId = 53, Category = "Truck", StartYear = 2006 },
+        new CarModel { Id = 327, Name = "Haval H6", CarBrandId = 53, Category = "SUV", StartYear = 2011 },
+
+        // BYD Models (Brand ID: 54)
+        new CarModel { Id = 328, Name = "Tang", CarBrandId = 54, Category = "SUV", StartYear = 2015 },
+        new CarModel { Id = 329, Name = "Han", CarBrandId = 54, Category = "Sedan", StartYear = 2020 },
+        new CarModel { Id = 330, Name = "Qin", CarBrandId = 54, Category = "Sedan", StartYear = 2012 },
+
+        // Geely Models (Brand ID: 55)
+        new CarModel { Id = 331, Name = "Coolray", CarBrandId = 55, Category = "SUV", StartYear = 2018 },
+        new CarModel { Id = 332, Name = "Emgrand", CarBrandId = 55, Category = "Sedan", StartYear = 2009 },
+
+        // Chery Models (Brand ID: 56)
+        new CarModel { Id = 333, Name = "Tiggo", CarBrandId = 56, Category = "SUV", StartYear = 2005 },
+        new CarModel { Id = 334, Name = "Arrizo", CarBrandId = 56, Category = "Sedan", StartYear = 2013 },
+
+        // JAC Models (Brand ID: 57)
+        new CarModel { Id = 335, Name = "S3", CarBrandId = 57, Category = "SUV", StartYear = 2014 },
+        new CarModel { Id = 336, Name = "S4", CarBrandId = 57, Category = "SUV", StartYear = 2017 },
+
+        // Hongqi Models (Brand ID: 58)
+        new CarModel { Id = 337, Name = "H9", CarBrandId = 58, Category = "Sedan", StartYear = 2020 },
+        new CarModel { Id = 338, Name = "HS7", CarBrandId = 58, Category = "SUV", StartYear = 2019 },
+
+        // Dongfeng Models (Brand ID: 59)
+        new CarModel { Id = 339, Name = "AX7", CarBrandId = 59, Category = "SUV", StartYear = 2014 },
+        new CarModel { Id = 340, Name = "A9", CarBrandId = 59, Category = "Sedan", StartYear = 2016 },
+
+        // BAIC Models (Brand ID: 60)
+        new CarModel { Id = 341, Name = "X25", CarBrandId = 60, Category = "SUV", StartYear = 2015 },
+        new CarModel { Id = 342, Name = "X55", CarBrandId = 60, Category = "SUV", StartYear = 2020 },
+
+        // Indian brands
+        // Tata Models (Brand ID: 61)
+        new CarModel { Id = 343, Name = "Nexon", CarBrandId = 61, Category = "SUV", StartYear = 2017 },
+        new CarModel { Id = 344, Name = "Harrier", CarBrandId = 61, Category = "SUV", StartYear = 2019 },
+        new CarModel { Id = 345, Name = "Safari", CarBrandId = 61, Category = "SUV", StartYear = 1998 },
+
+        // Mahindra Models (Brand ID: 62)
+        new CarModel { Id = 346, Name = "Scorpio", CarBrandId = 62, Category = "SUV", StartYear = 2002 },
+        new CarModel { Id = 347, Name = "XUV500", CarBrandId = 62, Category = "SUV", StartYear = 2011 },
+        new CarModel { Id = 348, Name = "Thar", CarBrandId = 62, Category = "SUV", StartYear = 2010 },
+
+        // Maruti Suzuki Models (Brand ID: 63)
+        new CarModel { Id = 349, Name = "Alto", CarBrandId = 63, Category = "Hatchback", StartYear = 2000 },
+        new CarModel { Id = 350, Name = "Swift", CarBrandId = 63, Category = "Hatchback", StartYear = 2005 },
+        new CarModel { Id = 351, Name = "Baleno", CarBrandId = 63, Category = "Hatchback", StartYear = 2015 },
+
+        // Additional luxury and specialty brands
+        // Koenigsegg Models (Brand ID: 64)
+        new CarModel { Id = 352, Name = "Jesko", CarBrandId = 64, Category = "Coupe", StartYear = 2019 },
+        new CarModel { Id = 353, Name = "Regera", CarBrandId = 64, Category = "Coupe", StartYear = 2016 },
+
+        // Pagani Models (Brand ID: 65)
+        new CarModel { Id = 354, Name = "Huayra", CarBrandId = 65, Category = "Coupe", StartYear = 2011 },
+        new CarModel { Id = 355, Name = "Zonda", CarBrandId = 65, Category = "Coupe", StartYear = 1999, EndYear = 2017 },
+
+        // More Asian brands
+        // Proton Models (Brand ID: 66)
+        new CarModel { Id = 356, Name = "X70", CarBrandId = 66, Category = "SUV", StartYear = 2018 },
+        new CarModel { Id = 357, Name = "Saga", CarBrandId = 66, Category = "Sedan", StartYear = 1985 },
+
+        // Perodua Models (Brand ID: 67)
+        new CarModel { Id = 358, Name = "Myvi", CarBrandId = 67, Category = "Hatchback", StartYear = 2005 },
+        new CarModel { Id = 359, Name = "Aruz", CarBrandId = 67, Category = "SUV", StartYear = 2019 },
+
+        // Haval Models (Brand ID: 68)
+        new CarModel { Id = 360, Name = "H6", CarBrandId = 68, Category = "SUV", StartYear = 2011 },
+        new CarModel { Id = 361, Name = "H9", CarBrandId = 68, Category = "SUV", StartYear = 2014 },
+
+        // MG Models (Brand ID: 69)
+        new CarModel { Id = 362, Name = "HS", CarBrandId = 69, Category = "SUV", StartYear = 2018 },
+        new CarModel { Id = 363, Name = "ZS", CarBrandId = 69, Category = "SUV", StartYear = 2017 },
+
+        // Electric/New Energy brands
+        // Rivian Models (Brand ID: 70)
+        new CarModel { Id = 364, Name = "R1T", CarBrandId = 70, Category = "Truck", StartYear = 2021 },
+        new CarModel { Id = 365, Name = "R1S", CarBrandId = 70, Category = "SUV", StartYear = 2021 },
+
+        // Lucid Models (Brand ID: 71)
+        new CarModel { Id = 366, Name = "Air", CarBrandId = 71, Category = "Sedan", StartYear = 2021 },
+
+        // Fisker Models (Brand ID: 72)
+        new CarModel { Id = 367, Name = "Ocean", CarBrandId = 72, Category = "SUV", StartYear = 2022 },
+
+        // Polestar Models (Brand ID: 73)
+        new CarModel { Id = 368, Name = "2", CarBrandId = 73, Category = "Sedan", StartYear = 2019 },
+        new CarModel { Id = 369, Name = "3", CarBrandId = 73, Category = "SUV", StartYear = 2022 },
+
+        // NIO Models (Brand ID: 74)
+        new CarModel { Id = 370, Name = "ES8", CarBrandId = 74, Category = "SUV", StartYear = 2018 },
+        new CarModel { Id = 371, Name = "ES6", CarBrandId = 74, Category = "SUV", StartYear = 2019 },
+
+        // Xpeng Models (Brand ID: 75)
+        new CarModel { Id = 372, Name = "P7", CarBrandId = 75, Category = "Sedan", StartYear = 2020 },
+        new CarModel { Id = 373, Name = "G3", CarBrandId = 75, Category = "SUV", StartYear = 2018 },
+
+        // Li Auto Models (Brand ID: 76)
+        new CarModel { Id = 374, Name = "ONE", CarBrandId = 76, Category = "SUV", StartYear = 2019 },
+        new CarModel { Id = 375, Name = "L9", CarBrandId = 76, Category = "SUV", StartYear = 2022 },
+
+        // Additional specialty and rare brands
+        // Spyker Models (Brand ID: 77)
+        new CarModel { Id = 376, Name = "C8", CarBrandId = 77, Category = "Coupe", StartYear = 2000 },
+
+        // Morgan Models (Brand ID: 78)
+        new CarModel { Id = 377, Name = "Plus Four", CarBrandId = 78, Category = "Convertible", StartYear = 1950 },
+        new CarModel { Id = 378, Name = "Aero 8", CarBrandId = 78, Category = "Convertible", StartYear = 2001 },
+
+        // Caterham Models (Brand ID: 79)
+        new CarModel { Id = 379, Name = "Seven", CarBrandId = 79, Category = "Convertible", StartYear = 1973 },
+
+        // Noble Models (Brand ID: 80)
+        new CarModel { Id = 380, Name = "M600", CarBrandId = 80, Category = "Coupe", StartYear = 2009 },
+
+        // Ariel Models (Brand ID: 81)
+        new CarModel { Id = 381, Name = "Atom", CarBrandId = 81, Category = "Convertible", StartYear = 1999 },
+
+        // BAC Models (Brand ID: 82)
+        new CarModel { Id = 382, Name = "Mono", CarBrandId = 82, Category = "Convertible", StartYear = 2011 },
+
+        // Ginetta Models (Brand ID: 83)
+        new CarModel { Id = 383, Name = "G40", CarBrandId = 83, Category = "Coupe", StartYear = 2010 },
+
+        // TVR Models (Brand ID: 84)
+        new CarModel { Id = 384, Name = "Griffith", CarBrandId = 84, Category = "Convertible", StartYear = 1991 },
+
+        // Radical Models (Brand ID: 85)
+        new CarModel { Id = 385, Name = "SR3", CarBrandId = 85, Category = "Coupe", StartYear = 2001 },
+
+        // Donkervoort Models (Brand ID: 86)
+        new CarModel { Id = 386, Name = "D8 GTO", CarBrandId = 86, Category = "Convertible", StartYear = 2013 },
+
+        // Westfield Models (Brand ID: 87)
+        new CarModel { Id = 387, Name = "Seven", CarBrandId = 87, Category = "Convertible", StartYear = 1982 },
+
+        // Ultima Models (Brand ID: 88)
+        new CarModel { Id = 388, Name = "GTR", CarBrandId = 88, Category = "Coupe", StartYear = 1999 },
+
+        // Caparo Models (Brand ID: 89)
+        new CarModel { Id = 389, Name = "T1", CarBrandId = 89, Category = "Coupe", StartYear = 2006 }
     };
 }

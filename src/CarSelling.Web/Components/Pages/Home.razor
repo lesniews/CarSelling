@@ -97,7 +97,7 @@
                         {
                             <div style="color: green; font-size: 12px; margin-bottom: 5px;">✅ Loaded @availableBrandNames.Count brands</div>
                         }
-                        <select @bind="searchDto.Make" @bind:after="OnBrandChangedAfter" class="filter-select">
+                        <select @onchange="OnBrandChanged" class="filter-select" value="@searchDto.Make">
                             <option value="">Any brand</option>
                             @if (availableBrandNames != null)
                             {
@@ -529,38 +529,48 @@
         }
     }
 
-    private async Task OnBrandChangedAfter()
+    private async Task OnBrandChanged(ChangeEventArgs e)
     {
-        var selectedBrand = searchDto.Make;
-        Console.WriteLine($"🔥 DEBUG: OnBrandChangedAfter called! Brand: '{selectedBrand}'");
+        var selectedBrand = e.Value?.ToString() ?? "";
+        searchDto.Make = selectedBrand;
+        Console.WriteLine($"🔥 DEBUG: OnBrandChanged called! Brand: '{selectedBrand}'");
         
         // Clear the model selection when brand changes
         searchDto.Model = "";
         availableModelNames = null;
+        StateHasChanged(); // Force UI update immediately
         
         // Load models for the selected brand
         if (!string.IsNullOrEmpty(selectedBrand) && selectedBrand != previousSelectedBrand)
         {
-            Console.WriteLine($"DEBUG: Loading models for brand: {selectedBrand}");
+            Console.WriteLine($"🚀 DEBUG: Loading models for brand: {selectedBrand}");
             try
             {
                 availableModelNames = await CarModelService.GetModelNamesByBrandAsync(selectedBrand);
-                Console.WriteLine($"DEBUG: Loaded {availableModelNames?.Count ?? 0} models for {selectedBrand}");
+                Console.WriteLine($"✅ DEBUG: Loaded {availableModelNames?.Count ?? 0} models for {selectedBrand}");
+                
+                if (availableModelNames?.Count > 0)
+                {
+                    Console.WriteLine($"📋 DEBUG: First few models: {string.Join(", ", availableModelNames.Take(3))}");
+                }
+                
                 previousSelectedBrand = selectedBrand;
-                StateHasChanged();
+                StateHasChanged(); // Force UI update after loading models
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"ERROR: Failed to load models for brand {selectedBrand}: {ex.Message}");
+                Console.WriteLine($"❌ ERROR: Failed to load models for brand {selectedBrand}: {ex.Message}");
                 Console.WriteLine($"ERROR: Stack trace: {ex.StackTrace}");
                 availableModelNames = new List<string>();
+                StateHasChanged();
             }
         }
         else if (string.IsNullOrEmpty(selectedBrand))
         {
-            Console.WriteLine("DEBUG: Brand cleared, resetting models");
+            Console.WriteLine("🧹 DEBUG: Brand cleared, resetting models");
             availableModelNames = null;
             previousSelectedBrand = null;
+            StateHasChanged();
         }
         
         // Trigger search after brand/model change

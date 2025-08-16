@@ -85,6 +85,18 @@
                 <div class="filter-row">
                     <div class="filter-field">
                         <label>Car Brand</label>
+                        @if (availableBrandNames == null)
+                        {
+                            <div style="color: red; font-size: 12px; margin-bottom: 5px;">⚠️ Loading brands... (Check if API is running on port 5004)</div>
+                        }
+                        else if (availableBrandNames.Count == 0)
+                        {
+                            <div style="color: red; font-size: 12px; margin-bottom: 5px;">❌ No brands loaded - API connection failed</div>
+                        }
+                        else
+                        {
+                            <div style="color: green; font-size: 12px; margin-bottom: 5px;">✅ Loaded @availableBrandNames.Count brands</div>
+                        }
                         <select @bind="searchDto.Make" @bind:after="OnBrandChangedAfter" class="filter-select">
                             <option value="">Any brand</option>
                             @if (availableBrandNames != null)
@@ -102,9 +114,24 @@
                     </div>
                     <div class="filter-field">
                         <label>Car Model</label>
+                        @if (!string.IsNullOrEmpty(searchDto.Make))
+                        {
+                            @if (availableModelNames == null)
+                            {
+                                <div style="color: orange; font-size: 12px; margin-bottom: 5px;">🔄 Loading models for @searchDto.Make...</div>
+                            }
+                            else if (availableModelNames.Count == 0)
+                            {
+                                <div style="color: red; font-size: 12px; margin-bottom: 5px;">❌ No models found for @searchDto.Make</div>
+                            }
+                            else
+                            {
+                                <div style="color: green; font-size: 12px; margin-bottom: 5px;">✅ Loaded @availableModelNames.Count models for @searchDto.Make</div>
+                            }
+                        }
                         <select @bind="searchDto.Model" @bind:after="SearchCars" class="filter-select" disabled="@(string.IsNullOrEmpty(searchDto.Make))">
                             <option value="">@(string.IsNullOrEmpty(searchDto.Make) ? "Select brand first" : "Any model")</option>
-                            @if (availableModelNames != null)
+                            @if (availableModelNames != null && availableModelNames.Count > 0)
                             {
                                 @foreach (var model in availableModelNames)
                                 {
@@ -113,7 +140,7 @@
                             }
                             else if (!string.IsNullOrEmpty(searchDto.Make))
                             {
-                                <option disabled>Loading models...</option>
+                                <option disabled>Loading models for @searchDto.Make...</option>
                             }
                         </select>
                     </div>

@@ -6,14 +6,19 @@ public static class SampleDataSeeder
 {
     public static async Task SeedSampleDataAsync(CarSellingContext context)
     {
+        Console.WriteLine("=== STARTING SAMPLE DATA SEEDING ===");
+        
         // Clear existing data
+        Console.WriteLine("Clearing existing data...");
         context.CarListings.RemoveRange(context.CarListings);
         context.Users.RemoveRange(context.Users);
         context.CarModels.RemoveRange(context.CarModels);
         context.CarBrands.RemoveRange(context.CarBrands);
         await context.SaveChangesAsync();
+        Console.WriteLine("Existing data cleared.");
 
         // Seed car brands first - reset IDs to let database auto-generate
+        Console.WriteLine("Creating car brands...");
         var brandsToAdd = CarBrands.AllBrands.Select(b => new CarBrand 
         { 
             Name = b.Name, 
@@ -22,8 +27,10 @@ public static class SampleDataSeeder
             IsActive = b.IsActive 
         }).ToList();
         
+        Console.WriteLine($"Adding {brandsToAdd.Count} brands to context...");
         context.CarBrands.AddRange(brandsToAdd);
         await context.SaveChangesAsync();
+        Console.WriteLine("Car brands saved to database.");
 
         // Get the actual brand IDs from database for model relationships
         var brandLookup = context.CarBrands.ToDictionary(b => b.Name, b => b.Id);

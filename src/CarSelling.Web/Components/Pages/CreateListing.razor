@@ -431,9 +431,9 @@
                     <div class="card-content">
                         <div class="form-grid">
                             <div class="form-field">
-                                <label class="field-label">Full Name *</label>
-                                <InputText @bind-Value="createModel.ContactName" class="field-input" placeholder="Your full name" />
-                                <ValidationMessage For="@(() => createModel.ContactName)" />
+                                <label class="field-label">Email Address *</label>
+                                <InputText @bind-Value="createModel.ContactEmail" class="field-input" placeholder="Your email address" />
+                                <ValidationMessage For="@(() => createModel.ContactEmail)" />
                             </div>
 
                             <div class="form-field">
@@ -640,9 +640,8 @@
                 return createModel.Images.Count > 0 && 
                        !string.IsNullOrEmpty(createModel.Description);
             case 4:
-                return !string.IsNullOrEmpty(createModel.ContactName) && 
+                return !string.IsNullOrEmpty(createModel.ContactEmail) && 
                        !string.IsNullOrEmpty(createModel.ContactPhone) && 
-                       !string.IsNullOrEmpty(createModel.ContactEmail) && 
                        !string.IsNullOrEmpty(createModel.Location);
             default:
                 return true;

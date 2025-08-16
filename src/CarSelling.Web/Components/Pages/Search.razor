@@ -21,7 +21,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Make</label>
-                        <select @bind="searchDto.Make" @onchange="OnBrandChanged" class="form-select">
+                        <select @onchange="OnBrandChanged" class="form-select">
                             <option value="">Any Make</option>
                             @if (availableBrandNames != null)
                             {
@@ -35,7 +35,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Model</label>
-                        <select @bind="searchDto.Model" @onchange="SearchCars" class="form-select" disabled="@(string.IsNullOrEmpty(searchDto.Make))">
+                        <select @onchange="OnModelChanged" class="form-select" disabled="@(string.IsNullOrEmpty(searchDto.Make))">
                             <option value="">@(string.IsNullOrEmpty(searchDto.Make) ? "Select brand first" : "Any Model")</option>
                             @if (availableModelNames != null)
                             {
@@ -252,6 +252,15 @@
         }
         
         // Trigger search after brand/model change
+        await SearchCars();
+    }
+
+    private async Task OnModelChanged(ChangeEventArgs e)
+    {
+        var selectedModel = e.Value?.ToString();
+        searchDto.Model = selectedModel ?? "";
+        
+        // Trigger search after model change
         await SearchCars();
     }
 

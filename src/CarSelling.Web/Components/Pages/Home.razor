@@ -95,6 +95,9 @@
             <button class="clear-filters-btn" @onclick="() => showDebugPanel = !showDebugPanel" style="margin-left: 10px;">
                 🐛 Debug
             </button>
+            <button class="clear-filters-btn" @onclick="TestBrandChange" style="margin-left: 10px;">
+                🧪 Test
+            </button>
         </div>
 
         <div class="filters-grid">
@@ -104,13 +107,13 @@
                 <div class="filter-row">
                     <div class="filter-field">
                         <label>Car Brand</label>
-                        <select @onchange="OnBrandChanged" class="filter-select" value="@searchDto.Make">
+                        <select @onchange="OnBrandChanged" @onclick="OnBrandClick" class="filter-select">
                             <option value="">Any brand</option>
                             @if (availableBrandNames != null)
                             {
                                 @foreach (var brand in availableBrandNames)
                                 {
-                                    <option value="@brand">@brand</option>
+                                    <option value="@brand" selected="@(searchDto.Make == brand)">@brand</option>
                                 }
                             }
                             else
@@ -539,6 +542,9 @@
         searchDto.Make = selectedBrand;
         Console.WriteLine($"🔥 DEBUG: OnBrandChanged called! Brand: '{selectedBrand}'");
         
+        // Add visible alert for testing (remove later)
+        await Task.Delay(100); // Small delay to ensure console log appears first
+        
         // Clear the model selection when brand changes
         searchDto.Model = "";
         availableModelNames = null;
@@ -586,6 +592,18 @@
         
         // Trigger search after brand/model change
         await SearchCars();
+    }
+
+    private void OnBrandClick()
+    {
+        Console.WriteLine("🖱️ DEBUG: Brand dropdown clicked!");
+    }
+
+    private async Task TestBrandChange()
+    {
+        Console.WriteLine("🧪 TEST: Manually triggering brand change to Toyota");
+        var fakeEvent = new ChangeEventArgs { Value = "Toyota" };
+        await OnBrandChanged(fakeEvent);
     }
 
     private async Task ClearAllFilters()

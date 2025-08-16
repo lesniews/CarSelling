@@ -1,0 +1,11 @@
+--2025-07-30 15:22:43--  https://drive.google.com/file/d/1AYNFfF32bdCIsoBZGHWYhYIyKsLOJCx7/view?usp=drive_link
+Resolving drive.google.com (drive.google.com)... 142.250.203.142, 2a00:1450:401b:80e::200e
+Connecting to drive.google.com (drive.google.com)|142.250.203.142|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘view?usp=drive_link.3’
+
+     0K .......... .......... .......... .......... ..          528K=0.08s
+
+2025-07-30 15:22:44 (528 KB/s) - ‘view?usp=drive_link.3’ saved [43720]
+

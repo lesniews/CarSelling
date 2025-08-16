@@ -1,5 +1,7 @@
 ﻿@page "/create-listing"
 @inject ICarListingApiService CarListingService
+@inject CarBrandApiService CarBrandService
+@inject CarModelApiService CarModelService
 @inject NavigationManager Navigation
 @using CarSelling.Shared.DTOs
 @using CarSelling.Web.Services
@@ -7,25 +9,73 @@
 
 <PageTitle>Sell Your Car - CarMarket</PageTitle>
 
-<div class="create-listing-container">
-    <!-- Hero Section -->
-    <div class="create-listing-hero">
+<div class="sell-car-container">
+    <!-- Header Section -->
+    <div class="sell-car-header">
         <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">Sell Your Car with Confidence</h1>
-                <p class="hero-subtitle">Reach thousands of potential buyers with our comprehensive listing platform</p>
-                <div class="progress-indicator">
-                    <div class="step @(currentStep >= 1 ? "active" : "")">
-                        <div class="step-number">1</div>
-                        <span>Vehicle Details</span>
+            <div class="header-breadcrumb">
+                <button class="back-button" @onclick="GoBack">
+                    <svg class="back-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Back to listings
+                </button>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">Sell Your Car</span>
+            </div>
+            
+            <div class="header-content">
+                <h1 class="main-title">Sell Your Car</h1>
+                <p class="main-subtitle">Create a detailed listing to attract potential buyers</p>
+                
+                <!-- Progress Section -->
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: @(((float)currentStep / totalSteps) * 100)%"></div>
                     </div>
-                    <div class="step @(currentStep >= 2 ? "active" : "")">
-                        <div class="step-number">2</div>
-                        <span>Features & Condition</span>
-                    </div>
-                    <div class="step @(currentStep >= 3 ? "active" : "")">
-                        <div class="step-number">3</div>
-                        <span>Pricing & Contact</span>
+                    <div class="progress-steps">
+                        @for (int i = 1; i <= totalSteps; i++)
+                        {
+                            int stepNum = i;
+                            <div class="progress-step @(currentStep >= stepNum ? "active" : "") @(currentStep > stepNum ? "completed" : "")">
+                                <div class="step-circle">
+                                    @if (currentStep > stepNum)
+                                    {
+                                        <svg class="check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    }
+                                    else if (stepNum == 1)
+                                    {
+                                        <svg class="step-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12a3 3 0 116 0 3 3 0 01-6 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14h2l-2-8H5l-2 8h2m6 5a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                    }
+                                    else if (stepNum == 2)
+                                    {
+                                        <svg class="step-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                    }
+                                    else if (stepNum == 3)
+                                    {
+                                        <svg class="step-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                    }
+                                    else
+                                    {
+                                        <svg class="step-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                        </svg>
+                                    }
+                                </div>
+                                <span class="step-title">@GetStepTitle(stepNum)</span>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -33,561 +83,441 @@
     </div>
 
     <!-- Form Content -->
-    <div class="container">
-        <div class="form-container">
-            <EditForm Model="@createModel" OnValidSubmit="@HandleValidSubmit">
-                <DataAnnotationsValidator />
-                
-                @if (showValidationSummary)
-                {
-                    <div class="validation-summary">
-                        <ValidationSummary />
+    <div class="container form-content">
+        <EditForm Model="@createModel" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+            
+            @if (showValidationSummary)
+            {
+                <div class="validation-summary">
+                    <ValidationSummary />
+                </div>
+            }
+
+            <!-- Step 1: Basic Information -->
+            @if (currentStep == 1)
+            {
+                <div class="form-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12a3 3 0 116 0 3 3 0 01-6 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14h2l-2-8H5l-2 8h2m6 5a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Basic Vehicle Information
+                        </h2>
                     </div>
-                }
-
-                <!-- Step 1: Vehicle Details -->
-                @if (currentStep == 1)
-                {
-                    <div class="form-step active">
-                        <div class="step-header">
-                            <h2>Vehicle Details</h2>
-                            <p>Tell us about your car's basic information</p>
-                        </div>
-
+                    <div class="card-content">
                         <div class="form-grid">
-                            <!-- Basic Info Card -->
-                            <div class="form-card">
-                                <div class="card-header">
-                                    <h3>
-                                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12a3 3 0 116 0 3 3 0 01-6 0z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14h2l-2-8H5l-2 8h2m6 5a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        </svg>
-                                        Basic Information
-                                    </h3>
-                                </div>
-                                <div class="card-content">
-                                    <div class="form-field full-width">
-                                        <label class="field-label">Listing Title *</label>
-                                        <InputText @bind-Value="createModel.Title" class="field-input" placeholder="e.g., 2023 Honda Civic Sport - Excellent Condition, Low Miles" />
-                                        <ValidationMessage For="@(() => createModel.Title)" />
-                                    </div>
-
-                                    <div class="form-row">
-                                        <div class="form-field">
-                                            <label class="field-label">Make *</label>
-                                            <InputSelect @bind-Value="createModel.Make" class="field-select">
-                                                <option value="">Select Make</option>
-                                                <option value="Toyota">Toyota</option>
-                                                <option value="Honda">Honda</option>
-                                                <option value="Tesla">Tesla</option>
-                                                <option value="BMW">BMW</option>
-                                                <option value="Mercedes">Mercedes</option>
-                                                <option value="Audi">Audi</option>
-                                                <option value="Ford">Ford</option>
-                                                <option value="Chevrolet">Chevrolet</option>
-                                                <option value="Nissan">Nissan</option>
-                                                <option value="Hyundai">Hyundai</option>
-                                                <option value="Other">Other</option>
-                                            </InputSelect>
-                                            <ValidationMessage For="@(() => createModel.Make)" />
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Model *</label>
-                                            <InputText @bind-Value="createModel.Model" class="field-input" placeholder="Civic" />
-                                            <ValidationMessage For="@(() => createModel.Model)" />
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Year *</label>
-                                            <InputNumber @bind-Value="createModel.Year" class="field-input" />
-                                            <ValidationMessage For="@(() => createModel.Year)" />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-                                        <div class="form-field">
-                                            <label class="field-label">Body Type</label>
-                                            <InputSelect @bind-Value="createModel.BodyType" class="field-select">
-                                                <option value="">Select Body Type</option>
-                                                <option value="Sedan">Sedan</option>
-                                                <option value="SUV">SUV</option>
-                                                <option value="Hatchback">Hatchback</option>
-                                                <option value="Coupe">Coupe</option>
-                                                <option value="Convertible">Convertible</option>
-                                                <option value="Truck">Truck</option>
-                                                <option value="Van">Van</option>
-                                                <option value="Wagon">Wagon</option>
-                                            </InputSelect>
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Mileage *</label>
-                                            <div class="input-with-suffix">
-                                                <InputNumber @bind-Value="createModel.Mileage" class="field-input" />
-                                                <span class="input-suffix">miles</span>
-                                            </div>
-                                            <ValidationMessage For="@(() => createModel.Mileage)" />
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">VIN</label>
-                                            <InputText @bind-Value="createModel.VIN" class="field-input" placeholder="Optional" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Engine & Performance Card -->
-                            <div class="form-card">
-                                <div class="card-header">
-                                    <h3>
-                                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                        </svg>
-                                        Engine & Performance
-                                    </h3>
-                                </div>
-                                <div class="card-content">
-                                    <div class="form-row">
-                                        <div class="form-field">
-                                            <label class="field-label">Fuel Type</label>
-                                            <InputSelect @bind-Value="createModel.FuelType" class="field-select">
-                                                <option value="">Select Fuel Type</option>
-                                                <option value="Gasoline">Gasoline</option>
-                                                <option value="Diesel">Diesel</option>
-                                                <option value="Hybrid">Hybrid</option>
-                                                <option value="Electric">Electric</option>
-                                                <option value="Plug-in Hybrid">Plug-in Hybrid</option>
-                                            </InputSelect>
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Transmission</label>
-                                            <InputSelect @bind-Value="createModel.Transmission" class="field-select">
-                                                <option value="">Select Transmission</option>
-                                                <option value="Manual">Manual</option>
-                                                <option value="Automatic">Automatic</option>
-                                                <option value="CVT">CVT</option>
-                                                <option value="Semi-Automatic">Semi-Automatic</option>
-                                            </InputSelect>
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Drivetrain</label>
-                                            <InputSelect @bind-Value="createModel.Drivetrain" class="field-select">
-                                                <option value="">Select Drivetrain</option>
-                                                <option value="FWD">Front-Wheel Drive</option>
-                                                <option value="RWD">Rear-Wheel Drive</option>
-                                                <option value="AWD">All-Wheel Drive</option>
-                                                <option value="4WD">4-Wheel Drive</option>
-                                            </InputSelect>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-                                        <div class="form-field">
-                                            <label class="field-label">Engine Size</label>
-                                            <InputText @bind-Value="createModel.EngineSize" class="field-input" placeholder="e.g., 2.0L, 3.5L V6" />
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Horsepower</label>
-                                            <div class="input-with-suffix">
-                                                <InputNumber @bind-Value="createModel.Horsepower" class="field-input" />
-                                                <span class="input-suffix">HP</span>
-                                            </div>
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Fuel Economy</label>
-                                            <div class="fuel-economy-inputs">
-                                                <div class="economy-input">
-                                                    <InputNumber @bind-Value="createModel.FuelEconomyCity" class="field-input" placeholder="City" />
-                                                    <span>City</span>
-                                                </div>
-                                                <div class="economy-input">
-                                                    <InputNumber @bind-Value="createModel.FuelEconomyHighway" class="field-input" placeholder="Hwy" />
-                                                    <span>Highway</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="step-navigation">
-                            <button type="button" class="btn btn-primary btn-large" @onclick="NextStep">
-                                Continue to Features
-                                <svg class="btn-icon-right" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                }
-
-                <!-- Step 2: Features & Condition -->
-                @if (currentStep == 2)
-                {
-                    <div class="form-step active">
-                        <div class="step-header">
-                            <h2>Features & Condition</h2>
-                            <p>Help buyers understand your car's condition and features</p>
-                        </div>
-
-                        <div class="form-grid">
-                            <!-- Condition & History Card -->
-                            <div class="form-card">
-                                <div class="card-header">
-                                    <h3>
-                                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        Condition & History
-                                    </h3>
-                                </div>
-                                <div class="card-content">
-                                    <div class="form-row">
-                                        <div class="form-field">
-                                            <label class="field-label">Overall Condition</label>
-                                            <InputSelect @bind-Value="createModel.Condition" class="field-select">
-                                                <option value="">Select Condition</option>
-                                                <option value="Excellent">Excellent</option>
-                                                <option value="Very Good">Very Good</option>
-                                                <option value="Good">Good</option>
-                                                <option value="Fair">Fair</option>
-                                            </InputSelect>
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Damage Status</label>
-                                            <InputSelect @bind-Value="createModel.DamageStatus" class="field-select">
-                                                <option value="">Select Status</option>
-                                                <option value="No Damage">No Damage</option>
-                                                <option value="Minor Damage">Minor Damage</option>
-                                                <option value="Major Damage">Major Damage</option>
-                                            </InputSelect>
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Title Status</label>
-                                            <InputSelect @bind-Value="createModel.CarStatus" class="field-select">
-                                                <option value="">Select Status</option>
-                                                <option value="Clean Title">Clean Title</option>
-                                                <option value="Salvage">Salvage</option>
-                                                <option value="Rebuilt">Rebuilt</option>
-                                                <option value="Lemon">Lemon</option>
-                                            </InputSelect>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-                                        <div class="form-field">
-                                            <label class="field-label">Previous Owners</label>
-                                            <InputNumber @bind-Value="createModel.PreviousOwners" class="field-input" />
-                                        </div>
-                                        <div class="form-field checkbox-field">
-                                            <label class="checkbox-label">
-                                                <InputCheckbox @bind-Value="createModel.AccidentHistory" class="field-checkbox" />
-                                                <span class="checkmark"></span>
-                                                Accident History
-                                            </label>
-                                        </div>
-                                        <div class="form-field checkbox-field">
-                                            <label class="checkbox-label">
-                                                <InputCheckbox @bind-Value="createModel.ServiceHistoryAvailable" class="field-checkbox" />
-                                                <span class="checkmark"></span>
-                                                Service Records Available
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Colors & Interior Card -->
-                            <div class="form-card">
-                                <div class="card-header">
-                                    <h3>
-                                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM7 21a4 4 0 004-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4"></path>
-                                        </svg>
-                                        Colors & Interior
-                                    </h3>
-                                </div>
-                                <div class="card-content">
-                                    <div class="form-row">
-                                        <div class="form-field">
-                                            <label class="field-label">Exterior Color</label>
-                                            <InputText @bind-Value="createModel.ExteriorColor" class="field-input" placeholder="e.g., Black, White, Silver" />
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Interior Color</label>
-                                            <InputText @bind-Value="createModel.InteriorColor" class="field-input" placeholder="e.g., Black, Beige, Gray" />
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Interior Material</label>
-                                            <InputSelect @bind-Value="createModel.InteriorMaterial" class="field-select">
-                                                <option value="">Select Material</option>
-                                                <option value="Cloth">Cloth</option>
-                                                <option value="Leather">Leather</option>
-                                                <option value="Leatherette">Leatherette</option>
-                                                <option value="Vinyl">Vinyl</option>
-                                                <option value="Alcantara">Alcantara</option>
-                                            </InputSelect>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Equipment & Features Card -->
-                            <div class="form-card full-width">
-                                <div class="card-header">
-                                    <h3>
-                                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        Equipment & Features
-                                    </h3>
-                                    <p>Select all features that apply to your vehicle</p>
-                                </div>
-                                <div class="card-content">
-                                    <div class="equipment-grid">
-                                        @foreach (var equipment in availableEquipment)
+                            <div class="form-field">
+                                <label class="field-label">Brand *</label>
+                                <InputSelect @bind-Value="createModel.Make" @onchange="OnBrandChanged" class="field-select">
+                                    <option value="">Select brand</option>
+                                    @if (availableBrandNames != null)
+                                    {
+                                        @foreach (var brand in availableBrandNames)
                                         {
-                                            <label class="equipment-checkbox">
-                                                <input type="checkbox" @onchange="@((e) => ToggleEquipment(equipment, (bool)e.Value!))" />
-                                                <span class="equipment-checkmark"></span>
-                                                <span class="equipment-label">@equipment</span>
-                                            </label>
+                                            <option value="@brand">@brand</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option disabled>Loading brands...</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => createModel.Make)" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Model *</label>
+                                <InputSelect @bind-Value="createModel.Model" class="field-select" disabled="@(string.IsNullOrEmpty(createModel.Make))">
+                                    <option value="">@(string.IsNullOrEmpty(createModel.Make) ? "Select brand first" : "Select model")</option>
+                                    @if (availableModelNames != null)
+                                    {
+                                        @foreach (var model in availableModelNames)
+                                        {
+                                            <option value="@model">@model</option>
+                                        }
+                                    }
+                                    else if (!string.IsNullOrEmpty(createModel.Make))
+                                    {
+                                        <option disabled>Loading models...</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => createModel.Model)" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Generation</label>
+                                <InputText @bind-Value="createModel.ModelGeneration" class="field-input" placeholder="e.g., XV70, 10th Gen, Highland" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Year *</label>
+                                <InputNumber @bind-Value="createModel.Year" class="field-input" placeholder="e.g., 2022" />
+                                <ValidationMessage For="@(() => createModel.Year)" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Body Type *</label>
+                                <InputSelect @bind-Value="createModel.BodyType" class="field-select">
+                                    <option value="">Select body type</option>
+                                    <option value="Sedan">Sedan</option>
+                                    <option value="SUV">SUV</option>
+                                    <option value="Truck">Truck</option>
+                                    <option value="Coupe">Coupe</option>
+                                    <option value="Convertible">Convertible</option>
+                                    <option value="Hatchback">Hatchback</option>
+                                    <option value="Wagon">Wagon</option>
+                                    <option value="Van">Van</option>
+                                </InputSelect>
+                                <ValidationMessage For="@(() => createModel.BodyType)" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Price (USD) *</label>
+                                <InputNumber @bind-Value="createModel.Price" class="field-input" placeholder="e.g., 25000" />
+                                <ValidationMessage For="@(() => createModel.Price)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Step 2: Specifications -->
+            @if (currentStep == 2)
+            {
+                <div class="form-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Vehicle Specifications
+                        </h2>
+                    </div>
+                    <div class="card-content">
+                        <!-- Engine & Performance -->
+                        <div class="section-header">
+                            <h3>Engine & Performance</h3>
+                        </div>
+                        <div class="form-grid grid-3">
+                            <div class="form-field">
+                                <label class="field-label">Mileage *</label>
+                                <InputNumber @bind-Value="createModel.Mileage" class="field-input" placeholder="e.g., 50000" />
+                                <ValidationMessage For="@(() => createModel.Mileage)" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Fuel Type *</label>
+                                <InputSelect @bind-Value="createModel.FuelType" class="field-select">
+                                    <option value="">Select fuel type</option>
+                                    <option value="Gasoline">Gasoline</option>
+                                    <option value="Diesel">Diesel</option>
+                                    <option value="Hybrid">Hybrid</option>
+                                    <option value="Electric">Electric</option>
+                                </InputSelect>
+                                <ValidationMessage For="@(() => createModel.FuelType)" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Transmission *</label>
+                                <InputSelect @bind-Value="createModel.Transmission" class="field-select">
+                                    <option value="">Select transmission</option>
+                                    <option value="Automatic">Automatic</option>
+                                    <option value="Manual">Manual</option>
+                                    <option value="CVT">CVT</option>
+                                </InputSelect>
+                                <ValidationMessage For="@(() => createModel.Transmission)" />
+                            </div>
+                        </div>
+
+                        <div class="section-separator"></div>
+
+                        <!-- Additional Specifications -->
+                        <div class="section-header">
+                            <h3>Additional Specifications</h3>
+                        </div>
+                        <div class="form-grid grid-3">
+                            <div class="form-field">
+                                <label class="field-label">Engine Size</label>
+                                <InputText @bind-Value="createModel.EngineSize" class="field-input" placeholder="e.g., 2.5L" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Cylinders</label>
+                                <InputNumber @bind-Value="cylinders" class="field-input" placeholder="e.g., 4" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Drivetrain</label>
+                                <InputSelect @bind-Value="createModel.Drivetrain" class="field-select">
+                                    <option value="">Select drivetrain</option>
+                                    <option value="Front-Wheel Drive">Front-Wheel Drive</option>
+                                    <option value="Rear-Wheel Drive">Rear-Wheel Drive</option>
+                                    <option value="All-Wheel Drive">All-Wheel Drive</option>
+                                    <option value="Four-Wheel Drive">Four-Wheel Drive</option>
+                                </InputSelect>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Doors</label>
+                                <InputSelect @bind-Value="doors" class="field-select">
+                                    <option value="">Number of doors</option>
+                                    <option value="2">2 doors</option>
+                                    <option value="4">4 doors</option>
+                                    <option value="5">5 doors</option>
+                                </InputSelect>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Seats</label>
+                                <InputNumber @bind-Value="seats" class="field-input" placeholder="e.g., 5" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Exterior Color</label>
+                                <InputText @bind-Value="createModel.ExteriorColor" class="field-input" placeholder="e.g., Midnight Black Metallic" />
+                            </div>
+                        </div>
+
+                        <div class="section-separator"></div>
+
+                        <!-- Condition & Status -->
+                        <div class="section-header">
+                            <h3>Condition & Status</h3>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label class="field-label">Condition *</label>
+                                <InputSelect @bind-Value="createModel.Condition" class="field-select">
+                                    <option value="">Select condition</option>
+                                    <option value="Excellent">Excellent</option>
+                                    <option value="Very Good">Very Good</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Fair">Fair</option>
+                                    <option value="Poor">Poor</option>
+                                </InputSelect>
+                                <ValidationMessage For="@(() => createModel.Condition)" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Damage Status</label>
+                                <InputSelect @bind-Value="createModel.DamageStatus" class="field-select">
+                                    <option value="">Select damage status</option>
+                                    <option value="No damage">No damage</option>
+                                    <option value="Minor scratches">Minor scratches</option>
+                                    <option value="Repaired damage">Repaired damage</option>
+                                    <option value="Major damage">Major damage</option>
+                                </InputSelect>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Car Status</label>
+                                <InputSelect @bind-Value="createModel.CarStatus" class="field-select">
+                                    <option value="">Select car status</option>
+                                    <option value="New">New</option>
+                                    <option value="Used">Used</option>
+                                    <option value="Certified Pre-Owned">Certified Pre-Owned</option>
+                                </InputSelect>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Financial Info</label>
+                                <InputSelect @bind-Value="financialInfo" class="field-select">
+                                    <option value="">Select financial info</option>
+                                    <option value="Clear title">Clear title</option>
+                                    <option value="Financing available">Financing available</option>
+                                    <option value="Lease available">Lease available</option>
+                                    <option value="Lien">Lien</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Step 3: Photos & Description -->
+            @if (currentStep == 3)
+            {
+                <div class="form-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Photos & Description
+                        </h2>
+                    </div>
+                    <div class="card-content">
+                        <!-- Vehicle Photos -->
+                        <div class="form-section">
+                            <label class="field-label">Vehicle Photos *</label>
+                            <div class="image-upload-section">
+                                <div class="image-input-row">
+                                    <input @bind="imageUrlInput" @onkeypress="HandleImageKeyPress" class="field-input" placeholder="Enter image URL" />
+                                    <button type="button" class="add-image-btn" @onclick="AddImageUrl">
+                                        <svg class="plus-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                @if (createModel.Images.Count > 0)
+                                {
+                                    <div class="image-preview-grid">
+                                        @for (int i = 0; i < createModel.Images.Count; i++)
+                                        {
+                                            int index = i;
+                                            <div class="image-preview-item">
+                                                <img src="@createModel.Images[index]" alt="Car photo @(index + 1)" class="preview-image" />
+                                                <button type="button" class="remove-image-btn" @onclick="() => RemoveImage(index)">
+                                                    <svg class="trash-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
                                         }
                                     </div>
-                                </div>
+                                }
+                                <ValidationMessage For="@(() => createModel.Images)" />
                             </div>
                         </div>
 
-                        <div class="step-navigation">
-                            <button type="button" class="btn btn-outline" @onclick="PreviousStep">
-                                <svg class="btn-icon-left" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                                </svg>
-                                Back
-                            </button>
-                            <button type="button" class="btn btn-primary btn-large" @onclick="NextStep">
-                                Continue to Pricing
-                                <svg class="btn-icon-right" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </button>
+                        <div class="section-separator"></div>
+
+                        <!-- Description -->
+                        <div class="form-section">
+                            <label class="field-label">Description *</label>
+                            <InputTextArea @bind-Value="createModel.Description" class="field-textarea" rows="4" 
+                                         placeholder="Describe your vehicle's condition, history, and any special features..." />
+                            <ValidationMessage For="@(() => createModel.Description)" />
+                        </div>
+
+                        <div class="section-separator"></div>
+
+                        <!-- Equipment & Features -->
+                        <div class="form-section">
+                            <label class="field-label">Equipment & Features</label>
+                            <div class="equipment-grid">
+                                @foreach (var equipment in availableEquipment)
+                                {
+                                    <label class="equipment-item">
+                                        <input type="checkbox" @onchange="@((e) => ToggleEquipment(equipment, (bool)e.Value!))" />
+                                        <span class="equipment-checkmark"></span>
+                                        <span class="equipment-text">@equipment</span>
+                                    </label>
+                                }
+                            </div>
                         </div>
                     </div>
-                }
+                </div>
+            }
 
-                <!-- Step 3: Pricing & Contact -->
-                @if (currentStep == 3)
-                {
-                    <div class="form-step active">
-                        <div class="step-header">
-                            <h2>Pricing & Contact Information</h2>
-                            <p>Set your price and let buyers know how to reach you</p>
-                        </div>
-
+            <!-- Step 4: Contact Information -->
+            @if (currentStep == 4)
+            {
+                <div class="form-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            Contact Information
+                        </h2>
+                    </div>
+                    <div class="card-content">
                         <div class="form-grid">
-                            <!-- Pricing Card -->
-                            <div class="form-card">
-                                <div class="card-header">
-                                    <h3>
-                                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                                        </svg>
-                                        Pricing Information
-                                    </h3>
-                                </div>
-                                <div class="card-content">
-                                    <div class="form-row">
-                                        <div class="form-field">
-                                            <label class="field-label">Asking Price *</label>
-                                            <div class="input-with-prefix">
-                                                <span class="input-prefix">$</span>
-                                                <InputNumber @bind-Value="createModel.Price" class="field-input" />
-                                            </div>
-                                            <ValidationMessage For="@(() => createModel.Price)" />
-                                        </div>
-                                        <div class="form-field checkbox-field">
-                                            <label class="checkbox-label">
-                                                <InputCheckbox @bind-Value="createModel.NegotiablePrice" class="field-checkbox" />
-                                                <span class="checkmark"></span>
-                                                Price is negotiable
-                                            </label>
-                                        </div>
-                                        <div class="form-field checkbox-field">
-                                            <label class="checkbox-label">
-                                                <InputCheckbox @bind-Value="createModel.TradeInAccepted" class="field-checkbox" />
-                                                <span class="checkmark"></span>
-                                                Accept trade-ins
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-field">
-                                        <label class="field-label">Financing Options</label>
-                                        <InputText @bind-Value="createModel.FinancingOptions" class="field-input" placeholder="e.g., Bank financing available, Seller financing" />
-                                    </div>
-                                </div>
+                            <div class="form-field">
+                                <label class="field-label">Full Name *</label>
+                                <InputText @bind-Value="createModel.ContactName" class="field-input" placeholder="Your full name" />
+                                <ValidationMessage For="@(() => createModel.ContactName)" />
                             </div>
 
-                            <!-- Contact Information Card -->
-                            <div class="form-card">
-                                <div class="card-header">
-                                    <h3>
-                                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                        </svg>
-                                        Contact Information
-                                    </h3>
-                                </div>
-                                <div class="card-content">
-                                    <div class="form-row">
-                                        <div class="form-field">
-                                            <label class="field-label">Email Address *</label>
-                                            <InputText @bind-Value="createModel.ContactEmail" class="field-input" type="email" />
-                                            <ValidationMessage For="@(() => createModel.ContactEmail)" />
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Phone Number</label>
-                                            <InputText @bind-Value="createModel.ContactPhone" class="field-input" placeholder="(555) 123-4567" />
-                                            <ValidationMessage For="@(() => createModel.ContactPhone)" />
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">Seller Type</label>
-                                            <InputSelect @bind-Value="createModel.SellerType" class="field-select">
-                                                <option value="">Select Type</option>
-                                                <option value="Private Seller">Private Seller</option>
-                                                <option value="Professional Dealer">Professional Dealer</option>
-                                            </InputSelect>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-                                        <div class="form-field">
-                                            <label class="field-label">Location *</label>
-                                            <InputText @bind-Value="createModel.Location" class="field-input" placeholder="City, State" />
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="field-label">ZIP Code</label>
-                                            <InputText @bind-Value="createModel.ZipCode" class="field-input" placeholder="12345" />
-                                        </div>
-                                        <div class="form-field checkbox-field">
-                                            <label class="checkbox-label">
-                                                <InputCheckbox @bind-Value="createModel.TestDriveAvailable" class="field-checkbox" />
-                                                <span class="checkmark"></span>
-                                                Test drives available
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="form-field">
+                                <label class="field-label">Phone Number *</label>
+                                <InputText @bind-Value="createModel.ContactPhone" class="field-input" placeholder="(555) 123-4567" />
+                                <ValidationMessage For="@(() => createModel.ContactPhone)" />
                             </div>
 
-                            <!-- Description Card -->
-                            <div class="form-card full-width">
-                                <div class="card-header">
-                                    <h3>
-                                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                        </svg>
-                                        Description
-                                    </h3>
-                                    <p>Provide additional details about your vehicle</p>
-                                </div>
-                                <div class="card-content">
-                                    <div class="form-field">
-                                        <label class="field-label">Vehicle Description</label>
-                                        <InputTextArea @bind-Value="createModel.Description" class="field-textarea" rows="5" 
-                                                     placeholder="Describe your car's condition, maintenance history, special features, recent repairs, etc. Be honest and detailed to attract serious buyers." />
-                                    </div>
-                                </div>
+                            <div class="form-field">
+                                <label class="field-label">Email Address *</label>
+                                <InputText @bind-Value="createModel.ContactEmail" class="field-input" type="email" placeholder="your.email@example.com" />
+                                <ValidationMessage For="@(() => createModel.ContactEmail)" />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Location *</label>
+                                <InputText @bind-Value="createModel.Location" class="field-input" placeholder="City, State" />
+                                <ValidationMessage For="@(() => createModel.Location)" />
                             </div>
                         </div>
 
-                        <div class="step-navigation">
-                            <button type="button" class="btn btn-outline" @onclick="PreviousStep">
-                                <svg class="btn-icon-left" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                                </svg>
-                                Back
-                            </button>
-                            <button type="submit" class="btn btn-success btn-large" disabled="@isSubmitting">
-                                @if (isSubmitting)
-                                {
-                                    <div class="btn-spinner"></div>
-                                }
-                                else
-                                {
-                                    <svg class="btn-icon-left" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                }
-                                Create Listing
-                            </button>
+                        <div class="section-separator"></div>
+
+                        <!-- Listing Preview -->
+                        <div class="listing-preview">
+                            <h3 class="preview-title">Listing Preview</h3>
+                            <div class="preview-content">
+                                <div class="preview-item">
+                                    <span class="preview-label">Title:</span>
+                                    <span class="preview-value">@createModel.Year @createModel.Make @createModel.Model</span>
+                                </div>
+                                <div class="preview-item">
+                                    <span class="preview-label">Price:</span>
+                                    <span class="preview-value price">$@(createModel.Price > 0 ? createModel.Price.ToString("N0") : "0")</span>
+                                </div>
+                                <div class="preview-item">
+                                    <span class="preview-label">Location:</span>
+                                    <span class="preview-value">@(string.IsNullOrEmpty(createModel.Location) ? "Not specified" : createModel.Location)</span>
+                                </div>
+                                <div class="preview-item">
+                                    <span class="preview-label">Images:</span>
+                                    <span class="preview-value">@createModel.Images.Count photo@(createModel.Images.Count != 1 ? "s" : "")</span>
+                                </div>
+                                <div class="preview-item">
+                                    <span class="preview-label">Equipment:</span>
+                                    <span class="preview-value">@createModel.Equipment.Count feature@(createModel.Equipment.Count != 1 ? "s" : "")</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                }
-            </EditForm>
-        </div>
+                </div>
+            }
 
-        <!-- Tips Sidebar -->
-        <div class="tips-sidebar">
-            <div class="tips-card">
-                <div class="tips-header">
-                    <h3>💡 Tips for Success</h3>
-                </div>
-                <div class="tips-content">
-                    @if (currentStep == 1)
-                    {
-                        <div class="tip-item">
-                            <div class="tip-icon">🎯</div>
-                            <div class="tip-text">
-                                <strong>Accurate Details</strong>
-                                <p>Provide exact make, model, and year for better search visibility</p>
-                            </div>
-                        </div>
-                        <div class="tip-item">
-                            <div class="tip-icon">📊</div>
-                            <div class="tip-text">
-                                <strong>Honest Mileage</strong>
-                                <p>Accurate mileage builds trust with potential buyers</p>
-                            </div>
-                        </div>
-                    }
-                    @if (currentStep == 2)
-                    {
-                        <div class="tip-item">
-                            <div class="tip-icon">✅</div>
-                            <div class="tip-text">
-                                <strong>Be Honest</strong>
-                                <p>Transparent condition reporting prevents issues later</p>
-                            </div>
-                        </div>
-                        <div class="tip-item">
-                            <div class="tip-icon">🔧</div>
-                            <div class="tip-text">
-                                <strong>List Features</strong>
-                                <p>More features selected = more buyer interest</p>
-                            </div>
-                        </div>
-                    }
-                    @if (currentStep == 3)
-                    {
-                        <div class="tip-item">
-                            <div class="tip-icon">💰</div>
-                            <div class="tip-text">
-                                <strong>Research Pricing</strong>
-                                <p>Check similar listings to price competitively</p>
-                            </div>
-                        </div>
-                        <div class="tip-item">
-                            <div class="tip-icon">📱</div>
-                            <div class="tip-text">
-                                <strong>Respond Quickly</strong>
-                                <p>Fast responses lead to more successful sales</p>
-                            </div>
-                        </div>
-                    }
-                </div>
+            <!-- Navigation -->
+            <div class="form-navigation">
+                <button type="button" class="nav-button nav-button-prev @(currentStep == 1 ? "disabled" : "")" 
+                        @onclick="PreviousStep" disabled="@(currentStep == 1)">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Previous
+                </button>
+                
+                @if (currentStep < totalSteps)
+                {
+                    <button type="button" class="nav-button nav-button-next" @onclick="NextStep">
+                        Next
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" class="nav-button nav-button-submit" disabled="@isSubmitting">
+                        @if (isSubmitting)
+                        {
+                            <div class="spinner"></div>
+                        }
+                        Create Listing
+                    </button>
+                }
             </div>
-        </div>
+        </EditForm>
     </div>
 </div>
 
@@ -602,23 +532,145 @@
     private bool isSubmitting = false;
     private bool showValidationSummary = false;
     private int currentStep = 1;
-    private const int totalSteps = 3;
+    private const int totalSteps = 4;
+    private string imageUrlInput = "";
+    
+    // Additional fields not in main DTO
+    private int? cylinders;
+    private string doors = "";
+    private int? seats;
+    private string financialInfo = "";
 
     private readonly List<string> availableEquipment = CarEquipment.AvailableEquipment;
+    private List<string>? availableBrandNames;
+    private List<string>? availableModelNames;
+    private string? previousSelectedBrand;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            availableBrandNames = await CarBrandService.GetActiveBrandNamesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading car brands: {ex.Message}");
+            availableBrandNames = new List<string>();
+        }
+    }
+
+    private async Task OnBrandChanged(ChangeEventArgs e)
+    {
+        var selectedBrand = e.Value?.ToString();
+        createModel.Make = selectedBrand ?? "";
+        
+        // Clear the model selection when brand changes
+        createModel.Model = "";
+        availableModelNames = null;
+        
+        // Load models for the selected brand
+        if (!string.IsNullOrEmpty(selectedBrand) && selectedBrand != previousSelectedBrand)
+        {
+            try
+            {
+                availableModelNames = await CarModelService.GetModelNamesByBrandAsync(selectedBrand);
+                previousSelectedBrand = selectedBrand;
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading models for brand {selectedBrand}: {ex.Message}");
+                availableModelNames = new List<string>();
+            }
+        }
+        else if (string.IsNullOrEmpty(selectedBrand))
+        {
+            availableModelNames = null;
+            previousSelectedBrand = null;
+        }
+    }
+
+    private string GetStepTitle(int step)
+    {
+        return step switch
+        {
+            1 => "Basic Information",
+            2 => "Specifications", 
+            3 => "Photos & Description",
+            4 => "Contact Details",
+            _ => ""
+        };
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
 
     private void NextStep()
     {
-        if (currentStep < totalSteps)
+        if (ValidateCurrentStep())
         {
-            currentStep++;
+            currentStep = Math.Min(currentStep + 1, totalSteps);
         }
     }
 
     private void PreviousStep()
     {
-        if (currentStep > 1)
+        currentStep = Math.Max(currentStep - 1, 1);
+    }
+
+    private bool ValidateCurrentStep()
+    {
+        // Basic validation - in production you'd want more comprehensive validation
+        switch (currentStep)
         {
-            currentStep--;
+            case 1:
+                return !string.IsNullOrEmpty(createModel.Make) && 
+                       !string.IsNullOrEmpty(createModel.Model) && 
+                       createModel.Year > 0 && 
+                       createModel.Price > 0 && 
+                       !string.IsNullOrEmpty(createModel.BodyType);
+            case 2:
+                return createModel.Mileage > 0 && 
+                       !string.IsNullOrEmpty(createModel.FuelType) && 
+                       !string.IsNullOrEmpty(createModel.Transmission) && 
+                       !string.IsNullOrEmpty(createModel.Condition);
+            case 3:
+                return createModel.Images.Count > 0 && 
+                       !string.IsNullOrEmpty(createModel.Description);
+            case 4:
+                return !string.IsNullOrEmpty(createModel.ContactName) && 
+                       !string.IsNullOrEmpty(createModel.ContactPhone) && 
+                       !string.IsNullOrEmpty(createModel.ContactEmail) && 
+                       !string.IsNullOrEmpty(createModel.Location);
+            default:
+                return true;
+        }
+    }
+
+    private void HandleImageKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            AddImageUrl();
+        }
+    }
+
+    private void AddImageUrl()
+    {
+        if (!string.IsNullOrWhiteSpace(imageUrlInput) && !createModel.Images.Contains(imageUrlInput))
+        {
+            createModel.Images.Add(imageUrlInput);
+            imageUrlInput = "";
+        }
+    }
+
+    private void RemoveImage(int index)
+    {
+        if (index >= 0 && index < createModel.Images.Count)
+        {
+            createModel.Images.RemoveAt(index);
         }
     }
 
@@ -637,6 +689,12 @@
 
     private async Task HandleValidSubmit()
     {
+        if (!ValidateCurrentStep())
+        {
+            showValidationSummary = true;
+            return;
+        }
+
         isSubmitting = true;
         showValidationSummary = false;
         
@@ -645,7 +703,7 @@
             // Convert ExtendedCreateCarListingDto to CreateCarListingDto for API compatibility
             var basicCreateModel = new CreateCarListingDto
             {
-                Title = createModel.Title,
+                Title = $"{createModel.Year} {createModel.Make} {createModel.Model}",
                 Make = createModel.Make,
                 Model = createModel.Model,
                 Year = createModel.Year,

@@ -9,6 +9,16 @@ public static class SampleDataSeeder
         // Clear existing data
         context.CarListings.RemoveRange(context.CarListings);
         context.Users.RemoveRange(context.Users);
+        context.CarModels.RemoveRange(context.CarModels);
+        context.CarBrands.RemoveRange(context.CarBrands);
+        await context.SaveChangesAsync();
+
+        // Seed car brands first
+        context.CarBrands.AddRange(CarBrands.AllBrands);
+        await context.SaveChangesAsync();
+
+        // Seed car models
+        context.CarModels.AddRange(CarModels.AllModels);
         await context.SaveChangesAsync();
 
         // Create sample users

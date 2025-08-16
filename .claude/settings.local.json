@@ -4,7 +4,17 @@
       "Bash(git clone:*)",
       "Bash(dotnet build)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "WebFetch(domain:drive.google.com)",
+      "Bash(git push:*)",
+      "Bash(git config:*)",
+      "Bash(ssh:*)",
+      "Bash(sed:*)",
+      "Bash(find:*)",
+      "Bash(git pull:*)",
+      "Bash(dotnet ef migrations add:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": []
   }

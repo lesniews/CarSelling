@@ -16,6 +16,20 @@ builder.Services.AddHttpClient<ICarListingApiService, CarListingApiService>(clie
     Console.WriteLine($"Configured API base URL: {apiBaseUrl}");
 });
 
+// Add HTTP client for car brands API
+builder.Services.AddHttpClient<CarBrandApiService>(client =>
+{
+    var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:5004/";
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
+
+// Add HTTP client for car models API
+builder.Services.AddHttpClient<CarModelApiService>(client =>
+{
+    var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:5004/";
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline

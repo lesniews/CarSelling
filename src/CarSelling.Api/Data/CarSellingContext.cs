@@ -9,6 +9,8 @@ public class CarSellingContext : DbContext
 
     public DbSet<CarListing> CarListings { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<CarBrand> CarBrands { get; set; }
+    public DbSet<CarModel> CarModels { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -113,6 +115,47 @@ public class CarSellingContext : DbContext
             entity.Property(e => e.SoldCars).HasDefaultValue(0);
             entity.Property(e => e.AverageRating).HasDefaultValue(0);
             entity.Property(e => e.ReviewCount).HasDefaultValue(0);
+        });
+
+        modelBuilder.Entity<CarBrand>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Country).HasMaxLength(50);
+            entity.Property(e => e.IsLuxury).HasDefaultValue(false);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            
+            // Create unique index on brand name
+            entity.HasIndex(e => e.Name).IsUnique();
+            entity.HasIndex(e => e.Country);
+            entity.HasIndex(e => e.IsLuxury);
+            entity.HasIndex(e => e.IsActive);
+
+            // Configure relationship with CarModels
+            entity.HasMany(e => e.Models)
+                .WithOne(m => m.CarBrand)
+                .HasForeignKey(m => m.CarBrandId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<CarModel>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Category).HasMaxLength(30);
+            entity.Property(e => e.StartYear).HasDefaultValue(1990);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+
+            // Create indexes for better query performance
+            entity.HasIndex(e => e.Name);
+            entity.HasIndex(e => e.CarBrandId);
+            entity.HasIndex(e => e.Category);
+            entity.HasIndex(e => e.StartYear);
+            entity.HasIndex(e => e.EndYear);
+            entity.HasIndex(e => e.IsActive);
+
+            // Create composite unique index for brand + model name
+            entity.HasIndex(e => new { e.CarBrandId, e.Name }).IsUnique();
         });
     }
 }

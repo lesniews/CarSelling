@@ -48,22 +48,45 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Initialize database (recreate on each run during development)
+// Initialize database with migrations and seeding
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<CarSellingContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     
-    // Delete and recreate database to ensure schema changes are applied
-    if (app.Environment.IsDevelopment())
+    try
     {
-        await context.Database.EnsureDeletedAsync();
+        // Apply any pending migrations automatically
+        logger.LogInformation("Applying database migrations...");
+        await context.Database.MigrateAsync();
+        logger.LogInformation("Database migrations applied successfully.");
+        
+        // Seed sample data if database is empty
+        var hasData = await context.CarBrands.AnyAsync();
+        if (!hasData)
+        {
+            logger.LogInformation("Seeding database with car brands and models...");
+            await SampleDataSeeder.SeedSampleDataAsync(context);
+            logger.LogInformation("Database seeding completed successfully.");
+        }
+        else
+        {
+            logger.LogInformation("Database already contains data, skipping seeding.");
+        }
     }
-    await context.Database.EnsureCreatedAsync();
-    
-    // Seed sample data on every startup in development
-    if (app.Environment.IsDevelopment())
+    catch (Exception ex)
     {
+        logger.LogError(ex, "An error occurred while initializing the database.");
+        
+        // Fallback to EnsureCreated in case of migration issues
+        logger.LogWarning("Falling back to EnsureCreated approach...");
+        if (app.Environment.IsDevelopment())
+        {
+            await context.Database.EnsureDeletedAsync();
+        }
+        await context.Database.EnsureCreatedAsync();
         await SampleDataSeeder.SeedSampleDataAsync(context);
+        logger.LogInformation("Database initialized using fallback method.");
     }
 }
 

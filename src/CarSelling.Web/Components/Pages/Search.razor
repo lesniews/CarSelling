@@ -1,5 +1,7 @@
 ﻿@page "/search"
 @inject ICarListingApiService CarListingService
+@inject CarBrandApiService CarBrandService
+@inject CarModelApiService CarModelService
 @inject NavigationManager Navigation
 @using CarSelling.Shared.Models
 @using CarSelling.Shared.DTOs
@@ -19,12 +21,34 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Make</label>
-                        <input @bind="searchDto.Make" @onblur="SearchCars" class="form-control" placeholder="Any Make" />
+                        <select @bind="searchDto.Make" @onchange="OnBrandChanged" class="form-select">
+                            <option value="">Any Make</option>
+                            @if (availableBrandNames != null)
+                            {
+                                @foreach (var brand in availableBrandNames)
+                                {
+                                    <option value="@brand">@brand</option>
+                                }
+                            }
+                        </select>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Model</label>
-                        <input @bind="searchDto.Model" @onblur="SearchCars" class="form-control" placeholder="Any Model" />
+                        <select @bind="searchDto.Model" @onchange="SearchCars" class="form-select" disabled="@(string.IsNullOrEmpty(searchDto.Make))">
+                            <option value="">@(string.IsNullOrEmpty(searchDto.Make) ? "Select brand first" : "Any Model")</option>
+                            @if (availableModelNames != null)
+                            {
+                                @foreach (var model in availableModelNames)
+                                {
+                                    <option value="@model">@model</option>
+                                }
+                            }
+                            else if (!string.IsNullOrEmpty(searchDto.Make))
+                            {
+                                <option disabled>Loading models...</option>
+                            }
+                        </select>
                     </div>
 
                     <div class="mb-3">
@@ -167,9 +191,23 @@
     private IEnumerable<CarListing>? searchResults;
     private bool isLoading = true;
     private int totalPages = 1;
+    private List<string>? availableBrandNames;
+    private List<string>? availableModelNames;
+    private string? previousSelectedBrand;
 
     protected override async Task OnInitializedAsync()
     {
+        // Load car brands
+        try
+        {
+            availableBrandNames = await CarBrandService.GetActiveBrandNamesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading car brands: {ex.Message}");
+            availableBrandNames = new List<string>();
+        }
+
         // Parse query parameters
         var uri = new Uri(Navigation.Uri);
         var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
@@ -180,6 +218,40 @@
             searchDto.PriceTo = maxPrice;
         searchDto.Location = query["location"];
 
+        await SearchCars();
+    }
+
+    private async Task OnBrandChanged(ChangeEventArgs e)
+    {
+        var selectedBrand = e.Value?.ToString();
+        searchDto.Make = selectedBrand ?? "";
+        
+        // Clear the model selection when brand changes
+        searchDto.Model = "";
+        availableModelNames = null;
+        
+        // Load models for the selected brand
+        if (!string.IsNullOrEmpty(selectedBrand) && selectedBrand != previousSelectedBrand)
+        {
+            try
+            {
+                availableModelNames = await CarModelService.GetModelNamesByBrandAsync(selectedBrand);
+                previousSelectedBrand = selectedBrand;
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading models for brand {selectedBrand}: {ex.Message}");
+                availableModelNames = new List<string>();
+            }
+        }
+        else if (string.IsNullOrEmpty(selectedBrand))
+        {
+            availableModelNames = null;
+            previousSelectedBrand = null;
+        }
+        
+        // Trigger search after brand/model change
         await SearchCars();
     }
 

@@ -56,37 +56,56 @@ using (var scope = app.Services.CreateScope())
     
     try
     {
-        // Apply any pending migrations automatically
-        logger.LogInformation("Applying database migrations...");
-        await context.Database.MigrateAsync();
-        logger.LogInformation("Database migrations applied successfully.");
+        logger.LogInformation("Starting database initialization...");
         
-        // Seed sample data if database is empty
-        var hasData = await context.CarBrands.AnyAsync();
-        if (!hasData)
+        // For development, let's use EnsureCreated to make sure we get the latest schema
+        if (app.Environment.IsDevelopment())
         {
-            logger.LogInformation("Seeding database with car brands and models...");
+            logger.LogInformation("Development mode: Recreating database with latest schema...");
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
+            logger.LogInformation("Database recreated successfully.");
+        }
+        else
+        {
+            // In production, use migrations
+            logger.LogInformation("Production mode: Applying database migrations...");
+            await context.Database.MigrateAsync();
+            logger.LogInformation("Database migrations applied successfully.");
+        }
+        
+        // Always seed data in development, check if needed in production
+        if (app.Environment.IsDevelopment())
+        {
+            logger.LogInformation("Development mode: Seeding database with sample data...");
             await SampleDataSeeder.SeedSampleDataAsync(context);
             logger.LogInformation("Database seeding completed successfully.");
         }
         else
         {
-            logger.LogInformation("Database already contains data, skipping seeding.");
+            var hasData = await context.CarBrands.AnyAsync();
+            if (!hasData)
+            {
+                logger.LogInformation("Production mode: Database empty, seeding data...");
+                await SampleDataSeeder.SeedSampleDataAsync(context);
+                logger.LogInformation("Database seeding completed successfully.");
+            }
+        }
+        
+        // Verify the data was created
+        var brandCount = await context.CarBrands.CountAsync();
+        var modelCount = await context.CarModels.CountAsync();
+        logger.LogInformation($"Database verification: {brandCount} brands, {modelCount} models");
+        
+        if (brandCount == 0)
+        {
+            logger.LogWarning("No car brands found in database after seeding!");
         }
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "An error occurred while initializing the database.");
-        
-        // Fallback to EnsureCreated in case of migration issues
-        logger.LogWarning("Falling back to EnsureCreated approach...");
-        if (app.Environment.IsDevelopment())
-        {
-            await context.Database.EnsureDeletedAsync();
-        }
-        await context.Database.EnsureCreatedAsync();
-        await SampleDataSeeder.SeedSampleDataAsync(context);
-        logger.LogInformation("Database initialized using fallback method.");
+        logger.LogError(ex, "Critical error during database initialization: {Message}", ex.Message);
+        throw; // Re-throw to see the full error
     }
 }
 

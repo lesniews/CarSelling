@@ -13,12 +13,113 @@ public static class SampleDataSeeder
         context.CarBrands.RemoveRange(context.CarBrands);
         await context.SaveChangesAsync();
 
-        // Seed car brands first
-        context.CarBrands.AddRange(CarBrands.AllBrands);
+        // Seed car brands first - reset IDs to let database auto-generate
+        var brandsToAdd = CarBrands.AllBrands.Select(b => new CarBrand 
+        { 
+            Name = b.Name, 
+            Country = b.Country, 
+            IsLuxury = b.IsLuxury, 
+            IsActive = b.IsActive 
+        }).ToList();
+        
+        context.CarBrands.AddRange(brandsToAdd);
         await context.SaveChangesAsync();
 
-        // Seed car models
-        context.CarModels.AddRange(CarModels.AllModels);
+        // Get the actual brand IDs from database for model relationships
+        var brandLookup = context.CarBrands.ToDictionary(b => b.Name, b => b.Id);
+
+        // Seed car models with correct brand IDs
+        var modelsToAdd = new List<CarModel>();
+        
+        // Toyota Models
+        if (brandLookup.ContainsKey("Toyota"))
+        {
+            var toyotaId = brandLookup["Toyota"];
+            modelsToAdd.AddRange(new[]
+            {
+                new CarModel { Name = "Camry", CarBrandId = toyotaId, Category = "Sedan", StartYear = 1982 },
+                new CarModel { Name = "Corolla", CarBrandId = toyotaId, Category = "Sedan", StartYear = 1966 },
+                new CarModel { Name = "Prius", CarBrandId = toyotaId, Category = "Hybrid", StartYear = 1997 },
+                new CarModel { Name = "RAV4", CarBrandId = toyotaId, Category = "SUV", StartYear = 1994 },
+                new CarModel { Name = "Highlander", CarBrandId = toyotaId, Category = "SUV", StartYear = 2000 },
+                new CarModel { Name = "4Runner", CarBrandId = toyotaId, Category = "SUV", StartYear = 1984 },
+                new CarModel { Name = "Tacoma", CarBrandId = toyotaId, Category = "Truck", StartYear = 1995 },
+                new CarModel { Name = "Tundra", CarBrandId = toyotaId, Category = "Truck", StartYear = 1999 },
+                new CarModel { Name = "Sienna", CarBrandId = toyotaId, Category = "Van", StartYear = 1997 },
+                new CarModel { Name = "Avalon", CarBrandId = toyotaId, Category = "Sedan", StartYear = 1994 },
+                new CarModel { Name = "Venza", CarBrandId = toyotaId, Category = "SUV", StartYear = 2008 }
+            });
+        }
+
+        // Honda Models
+        if (brandLookup.ContainsKey("Honda"))
+        {
+            var hondaId = brandLookup["Honda"];
+            modelsToAdd.AddRange(new[]
+            {
+                new CarModel { Name = "Accord", CarBrandId = hondaId, Category = "Sedan", StartYear = 1976 },
+                new CarModel { Name = "Civic", CarBrandId = hondaId, Category = "Sedan", StartYear = 1972 },
+                new CarModel { Name = "CR-V", CarBrandId = hondaId, Category = "SUV", StartYear = 1995 },
+                new CarModel { Name = "Pilot", CarBrandId = hondaId, Category = "SUV", StartYear = 2002 },
+                new CarModel { Name = "Passport", CarBrandId = hondaId, Category = "SUV", StartYear = 1993 },
+                new CarModel { Name = "Ridgeline", CarBrandId = hondaId, Category = "Truck", StartYear = 2005 },
+                new CarModel { Name = "Odyssey", CarBrandId = hondaId, Category = "Van", StartYear = 1994 },
+                new CarModel { Name = "HR-V", CarBrandId = hondaId, Category = "SUV", StartYear = 2014 },
+                new CarModel { Name = "Insight", CarBrandId = hondaId, Category = "Hybrid", StartYear = 1999 }
+            });
+        }
+
+        // Ford Models
+        if (brandLookup.ContainsKey("Ford"))
+        {
+            var fordId = brandLookup["Ford"];
+            modelsToAdd.AddRange(new[]
+            {
+                new CarModel { Name = "F-150", CarBrandId = fordId, Category = "Truck", StartYear = 1948 },
+                new CarModel { Name = "Mustang", CarBrandId = fordId, Category = "Coupe", StartYear = 1964 },
+                new CarModel { Name = "Explorer", CarBrandId = fordId, Category = "SUV", StartYear = 1990 },
+                new CarModel { Name = "Edge", CarBrandId = fordId, Category = "SUV", StartYear = 2006 },
+                new CarModel { Name = "Escape", CarBrandId = fordId, Category = "SUV", StartYear = 2000 },
+                new CarModel { Name = "Expedition", CarBrandId = fordId, Category = "SUV", StartYear = 1996 },
+                new CarModel { Name = "Bronco", CarBrandId = fordId, Category = "SUV", StartYear = 1965 },
+                new CarModel { Name = "Ranger", CarBrandId = fordId, Category = "Truck", StartYear = 1982 }
+            });
+        }
+
+        // BMW Models
+        if (brandLookup.ContainsKey("BMW"))
+        {
+            var bmwId = brandLookup["BMW"];
+            modelsToAdd.AddRange(new[]
+            {
+                new CarModel { Name = "3 Series", CarBrandId = bmwId, Category = "Sedan", StartYear = 1975 },
+                new CarModel { Name = "5 Series", CarBrandId = bmwId, Category = "Sedan", StartYear = 1972 },
+                new CarModel { Name = "7 Series", CarBrandId = bmwId, Category = "Sedan", StartYear = 1977 },
+                new CarModel { Name = "X3", CarBrandId = bmwId, Category = "SUV", StartYear = 2003 },
+                new CarModel { Name = "X5", CarBrandId = bmwId, Category = "SUV", StartYear = 1999 },
+                new CarModel { Name = "X7", CarBrandId = bmwId, Category = "SUV", StartYear = 2018 },
+                new CarModel { Name = "4 Series", CarBrandId = bmwId, Category = "Coupe", StartYear = 2013 },
+                new CarModel { Name = "M3", CarBrandId = bmwId, Category = "Sedan", StartYear = 1985 },
+                new CarModel { Name = "M5", CarBrandId = bmwId, Category = "Sedan", StartYear = 1984 }
+            });
+        }
+
+        // Tesla Models
+        if (brandLookup.ContainsKey("Tesla"))
+        {
+            var teslaId = brandLookup["Tesla"];
+            modelsToAdd.AddRange(new[]
+            {
+                new CarModel { Name = "Model S", CarBrandId = teslaId, Category = "Sedan", StartYear = 2012 },
+                new CarModel { Name = "Model 3", CarBrandId = teslaId, Category = "Sedan", StartYear = 2017 },
+                new CarModel { Name = "Model X", CarBrandId = teslaId, Category = "SUV", StartYear = 2015 },
+                new CarModel { Name = "Model Y", CarBrandId = teslaId, Category = "SUV", StartYear = 2020 },
+                new CarModel { Name = "Cybertruck", CarBrandId = teslaId, Category = "Truck", StartYear = 2024 }
+            });
+        }
+
+        // Add all models to database
+        context.CarModels.AddRange(modelsToAdd);
         await context.SaveChangesAsync();
 
         // Create sample users

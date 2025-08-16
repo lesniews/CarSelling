@@ -1,5 +1,7 @@
 ﻿@page "/"
 @inject ICarListingApiService CarListingService
+@inject CarBrandApiService CarBrandService
+@inject CarModelApiService CarModelService
 @inject NavigationManager Navigation
 @using CarSelling.Shared.Models
 @using CarSelling.Shared.DTOs
@@ -83,20 +85,36 @@
                 <div class="filter-row">
                     <div class="filter-field">
                         <label>Car Brand</label>
-                        <select @bind="searchDto.Make" @bind:after="SearchCars" class="filter-select">
+                        <select @bind="searchDto.Make" @onchange="OnBrandChanged" class="filter-select">
                             <option value="">Any brand</option>
-                            <option value="Toyota">Toyota</option>
-                            <option value="Honda">Honda</option>
-                            <option value="Tesla">Tesla</option>
-                            <option value="BMW">BMW</option>
-                            <option value="Mercedes">Mercedes</option>
-                            <option value="Audi">Audi</option>
+                            @if (availableBrandNames != null)
+                            {
+                                @foreach (var brand in availableBrandNames)
+                                {
+                                    <option value="@brand">@brand</option>
+                                }
+                            }
+                            else
+                            {
+                                <option disabled>Loading brands...</option>
+                            }
                         </select>
                     </div>
                     <div class="filter-field">
                         <label>Car Model</label>
-                        <select @bind="searchDto.Model" @bind:after="SearchCars" class="filter-select">
-                            <option value="">Any model</option>
+                        <select @bind="searchDto.Model" @bind:after="SearchCars" class="filter-select" disabled="@(string.IsNullOrEmpty(searchDto.Make))">
+                            <option value="">@(string.IsNullOrEmpty(searchDto.Make) ? "Select brand first" : "Any model")</option>
+                            @if (availableModelNames != null)
+                            {
+                                @foreach (var model in availableModelNames)
+                                {
+                                    <option value="@model">@model</option>
+                                }
+                            }
+                            else if (!string.IsNullOrEmpty(searchDto.Make))
+                            {
+                                <option disabled>Loading models...</option>
+                            }
                         </select>
                     </div>
                     <div class="filter-field">
@@ -421,9 +439,22 @@
     private List<string> selectedEquipment = new();
 
     private readonly List<string> availableEquipment = CarEquipment.AvailableEquipment;
+    private List<string>? availableBrandNames;
+    private List<string>? availableModelNames;
+    private string? previousSelectedBrand;
 
     protected override async Task OnInitializedAsync()
     {
+        try
+        {
+            availableBrandNames = await CarBrandService.GetActiveBrandNamesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading car brands: {ex.Message}");
+            availableBrandNames = new List<string>();
+        }
+        
         await SearchCars();
     }
 
@@ -464,10 +495,46 @@
         }
     }
 
+    private async Task OnBrandChanged(ChangeEventArgs e)
+    {
+        var selectedBrand = e.Value?.ToString();
+        searchDto.Make = selectedBrand ?? "";
+        
+        // Clear the model selection when brand changes
+        searchDto.Model = "";
+        availableModelNames = null;
+        
+        // Load models for the selected brand
+        if (!string.IsNullOrEmpty(selectedBrand) && selectedBrand != previousSelectedBrand)
+        {
+            try
+            {
+                availableModelNames = await CarModelService.GetModelNamesByBrandAsync(selectedBrand);
+                previousSelectedBrand = selectedBrand;
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading models for brand {selectedBrand}: {ex.Message}");
+                availableModelNames = new List<string>();
+            }
+        }
+        else if (string.IsNullOrEmpty(selectedBrand))
+        {
+            availableModelNames = null;
+            previousSelectedBrand = null;
+        }
+        
+        // Trigger search after brand/model change
+        await SearchCars();
+    }
+
     private async Task ClearAllFilters()
     {
         searchDto = new ExtendedCarListingSearchDto();
         selectedEquipment.Clear();
+        availableModelNames = null;
+        previousSelectedBrand = null;
         await SearchCars();
     }
 

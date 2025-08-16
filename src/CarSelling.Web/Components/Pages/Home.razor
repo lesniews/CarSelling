@@ -85,7 +85,7 @@
                 <div class="filter-row">
                     <div class="filter-field">
                         <label>Car Brand</label>
-                        <select @bind="searchDto.Make" @onchange="OnBrandChanged" class="filter-select">
+                        <select value="@searchDto.Make" @onchange="OnBrandChanged" class="filter-select">
                             <option value="">Any brand</option>
                             @if (availableBrandNames != null)
                             {

@@ -1,5 +1,6 @@
 using CarSelling.Api.Data;
 using CarSelling.Api.Services;
+using CarSelling.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

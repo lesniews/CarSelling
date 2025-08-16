@@ -14,7 +14,8 @@
       "Bash(git pull:*)",
       "Bash(dotnet ef migrations add:*)",
       "Bash(ls:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(git rm:*)"
     ],
     "deny": []
   }

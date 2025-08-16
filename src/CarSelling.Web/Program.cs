@@ -10,10 +10,10 @@ builder.Services.AddServerSideBlazor();
 // Add HTTP client for API communication
 builder.Services.AddHttpClient<ICarListingApiService, CarListingApiService>(client =>
 {
-    // Configure the API base address from configuration
+    // Get API base URL from configuration
     var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:5004/";
     client.BaseAddress = new Uri(apiBaseUrl);
-    Console.WriteLine($"Configured API base URL: {apiBaseUrl}");
+    Console.WriteLine($"Configured Car Listing API base URL: {apiBaseUrl}");
 });
 
 // Add HTTP client for car brands API
@@ -21,6 +21,7 @@ builder.Services.AddHttpClient<CarBrandApiService>(client =>
 {
     var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:5004/";
     client.BaseAddress = new Uri(apiBaseUrl);
+    Console.WriteLine($"Configured Car Brand API base URL: {apiBaseUrl}");
 });
 
 // Add HTTP client for car models API
@@ -28,6 +29,7 @@ builder.Services.AddHttpClient<CarModelApiService>(client =>
 {
     var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:5004/";
     client.BaseAddress = new Uri(apiBaseUrl);
+    Console.WriteLine($"Configured Car Model API base URL: {apiBaseUrl}");
 });
 
 var app = builder.Build();

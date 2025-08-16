@@ -498,6 +498,7 @@
     private async Task OnBrandChanged(ChangeEventArgs e)
     {
         var selectedBrand = e.Value?.ToString();
+        Console.WriteLine($"DEBUG: Brand changed to: '{selectedBrand}'");
         searchDto.Make = selectedBrand ?? "";
         
         // Clear the model selection when brand changes
@@ -507,20 +508,24 @@
         // Load models for the selected brand
         if (!string.IsNullOrEmpty(selectedBrand) && selectedBrand != previousSelectedBrand)
         {
+            Console.WriteLine($"DEBUG: Loading models for brand: {selectedBrand}");
             try
             {
                 availableModelNames = await CarModelService.GetModelNamesByBrandAsync(selectedBrand);
+                Console.WriteLine($"DEBUG: Loaded {availableModelNames?.Count ?? 0} models for {selectedBrand}");
                 previousSelectedBrand = selectedBrand;
                 StateHasChanged();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading models for brand {selectedBrand}: {ex.Message}");
+                Console.WriteLine($"ERROR: Failed to load models for brand {selectedBrand}: {ex.Message}");
+                Console.WriteLine($"ERROR: Stack trace: {ex.StackTrace}");
                 availableModelNames = new List<string>();
             }
         }
         else if (string.IsNullOrEmpty(selectedBrand))
         {
+            Console.WriteLine("DEBUG: Brand cleared, resetting models");
             availableModelNames = null;
             previousSelectedBrand = null;
         }

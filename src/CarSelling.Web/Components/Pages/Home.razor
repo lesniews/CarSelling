@@ -532,7 +532,7 @@
     private async Task OnBrandChangedAfter()
     {
         var selectedBrand = searchDto.Make;
-        Console.WriteLine($"DEBUG: Brand changed to: '{selectedBrand}'");
+        Console.WriteLine($"🔥 DEBUG: OnBrandChangedAfter called! Brand: '{selectedBrand}'");
         
         // Clear the model selection when brand changes
         searchDto.Model = "";

@@ -85,7 +85,7 @@
                 <div class="filter-row">
                     <div class="filter-field">
                         <label>Car Brand</label>
-                        <select value="@searchDto.Make" @onchange="OnBrandChanged" class="filter-select">
+                        <select @bind="searchDto.Make" @bind:after="OnBrandChangedAfter" class="filter-select">
                             <option value="">Any brand</option>
                             @if (availableBrandNames != null)
                             {
@@ -448,10 +448,17 @@
         try
         {
             availableBrandNames = await CarBrandService.GetActiveBrandNamesAsync();
+            Console.WriteLine($"DEBUG: Loaded {availableBrandNames?.Count ?? 0} car brands");
+            
+            if (availableBrandNames?.Count > 0)
+            {
+                Console.WriteLine($"DEBUG: First few brands: {string.Join(", ", availableBrandNames.Take(5))}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading car brands: {ex.Message}");
+            Console.WriteLine($"ERROR: Failed to load car brands: {ex.Message}");
+            Console.WriteLine($"ERROR: Stack trace: {ex.StackTrace}");
             availableBrandNames = new List<string>();
         }
         
@@ -495,11 +502,10 @@
         }
     }
 
-    private async Task OnBrandChanged(ChangeEventArgs e)
+    private async Task OnBrandChangedAfter()
     {
-        var selectedBrand = e.Value?.ToString();
+        var selectedBrand = searchDto.Make;
         Console.WriteLine($"DEBUG: Brand changed to: '{selectedBrand}'");
-        searchDto.Make = selectedBrand ?? "";
         
         // Clear the model selection when brand changes
         searchDto.Model = "";

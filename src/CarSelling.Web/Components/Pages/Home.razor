@@ -71,11 +71,15 @@
         <div><strong>Debug Info:</strong></div>
         <div>Brands loaded: @(availableBrandNames?.Count ?? 0)</div>
         <div>Selected brand: "@(searchDto.Make ?? "none")"</div>
+        <div>Previous brand: "@(previousSelectedBrand ?? "none")"</div>
         <div>Models loaded: @(availableModelNames?.Count ?? 0)</div>
         @if (availableModelNames?.Count > 0)
         {
             <div>Models: @string.Join(", ", availableModelNames.Take(3))@(availableModelNames.Count > 3 ? "..." : "")</div>
         }
+        <div style="margin-top: 5px; font-size: 10px; color: #666;">
+            Real-time updates: @DateTime.Now.ToString("HH:mm:ss")
+        </div>
         <button @onclick="() => showDebugPanel = false" style="margin-top: 5px;">Hide Debug</button>
     </div>
 }
@@ -107,13 +111,13 @@
                 <div class="filter-row">
                     <div class="filter-field">
                         <label>Car Brand</label>
-                        <select @onchange="OnBrandChanged" @onclick="OnBrandClick" class="filter-select">
+                        <select @bind="searchDto.Make" @bind:after="OnBrandChangedBind" @onclick="OnBrandClick" class="filter-select">
                             <option value="">Any brand</option>
                             @if (availableBrandNames != null)
                             {
                                 @foreach (var brand in availableBrandNames)
                                 {
-                                    <option value="@brand" selected="@(searchDto.Make == brand)">@brand</option>
+                                    <option value="@brand">@brand</option>
                                 }
                             }
                             else
@@ -599,11 +603,65 @@
         Console.WriteLine("🖱️ DEBUG: Brand dropdown clicked!");
     }
 
+    private async Task OnBrandChangedBind()
+    {
+        var selectedBrand = searchDto.Make ?? "";
+        Console.WriteLine($"🔥 DEBUG: OnBrandChangedBind called! Brand: '{selectedBrand}'");
+        
+        // Clear the model selection when brand changes
+        searchDto.Model = "";
+        availableModelNames = null;
+        
+        // Show debug panel automatically when brand changes
+        if (!string.IsNullOrEmpty(selectedBrand))
+        {
+            showDebugPanel = true;
+        }
+        
+        StateHasChanged(); // Force UI update immediately
+        
+        // Load models for the selected brand
+        if (!string.IsNullOrEmpty(selectedBrand) && selectedBrand != previousSelectedBrand)
+        {
+            Console.WriteLine($"🚀 DEBUG: Loading models for brand: {selectedBrand}");
+            try
+            {
+                availableModelNames = await CarModelService.GetModelNamesByBrandAsync(selectedBrand);
+                Console.WriteLine($"✅ DEBUG: Loaded {availableModelNames?.Count ?? 0} models for {selectedBrand}");
+                
+                if (availableModelNames?.Count > 0)
+                {
+                    Console.WriteLine($"📋 DEBUG: First few models: {string.Join(", ", availableModelNames.Take(3))}");
+                }
+                
+                previousSelectedBrand = selectedBrand;
+                StateHasChanged(); // Force UI update after loading models
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ ERROR: Failed to load models for brand {selectedBrand}: {ex.Message}");
+                Console.WriteLine($"ERROR: Stack trace: {ex.StackTrace}");
+                availableModelNames = new List<string>();
+                StateHasChanged();
+            }
+        }
+        else if (string.IsNullOrEmpty(selectedBrand))
+        {
+            Console.WriteLine("🧹 DEBUG: Brand cleared, resetting models");
+            availableModelNames = null;
+            previousSelectedBrand = null;
+            StateHasChanged();
+        }
+        
+        // Trigger search after brand/model change
+        await SearchCars();
+    }
+
     private async Task TestBrandChange()
     {
         Console.WriteLine("🧪 TEST: Manually triggering brand change to Toyota");
-        var fakeEvent = new ChangeEventArgs { Value = "Toyota" };
-        await OnBrandChanged(fakeEvent);
+        searchDto.Make = "Toyota";
+        await OnBrandChangedBind();
     }
 
     private async Task ClearAllFilters()

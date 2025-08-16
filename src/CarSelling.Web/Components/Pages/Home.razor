@@ -64,6 +64,22 @@
     </div>
 </div>
 
+<!-- Debug Panel (can be removed in production) -->
+@if (showDebugPanel)
+{
+    <div style="position: fixed; top: 10px; right: 10px; background: #f0f0f0; padding: 10px; border: 1px solid #ccc; z-index: 1000; font-size: 12px; max-width: 300px;">
+        <div><strong>Debug Info:</strong></div>
+        <div>Brands loaded: @(availableBrandNames?.Count ?? 0)</div>
+        <div>Selected brand: "@(searchDto.Make ?? "none")"</div>
+        <div>Models loaded: @(availableModelNames?.Count ?? 0)</div>
+        @if (availableModelNames?.Count > 0)
+        {
+            <div>Models: @string.Join(", ", availableModelNames.Take(3))@(availableModelNames.Count > 3 ? "..." : "")</div>
+        }
+        <button @onclick="() => showDebugPanel = false" style="margin-top: 5px;">Hide Debug</button>
+    </div>
+}
+
 <!-- Search Filters Section -->
 <div class="search-section">
     <div class="container">
@@ -76,6 +92,9 @@
                 </svg>
                 Clear
             </button>
+            <button class="clear-filters-btn" @onclick="() => showDebugPanel = !showDebugPanel" style="margin-left: 10px;">
+                🐛 Debug
+            </button>
         </div>
 
         <div class="filters-grid">
@@ -85,18 +104,6 @@
                 <div class="filter-row">
                     <div class="filter-field">
                         <label>Car Brand</label>
-                        @if (availableBrandNames == null)
-                        {
-                            <div style="color: red; font-size: 12px; margin-bottom: 5px;">⚠️ Loading brands... (Check if API is running on port 5004)</div>
-                        }
-                        else if (availableBrandNames.Count == 0)
-                        {
-                            <div style="color: red; font-size: 12px; margin-bottom: 5px;">❌ No brands loaded - API connection failed</div>
-                        }
-                        else
-                        {
-                            <div style="color: green; font-size: 12px; margin-bottom: 5px;">✅ Loaded @availableBrandNames.Count brands</div>
-                        }
                         <select @onchange="OnBrandChanged" class="filter-select" value="@searchDto.Make">
                             <option value="">Any brand</option>
                             @if (availableBrandNames != null)
@@ -114,21 +121,6 @@
                     </div>
                     <div class="filter-field">
                         <label>Car Model</label>
-                        @if (!string.IsNullOrEmpty(searchDto.Make))
-                        {
-                            @if (availableModelNames == null)
-                            {
-                                <div style="color: orange; font-size: 12px; margin-bottom: 5px;">🔄 Loading models for @searchDto.Make...</div>
-                            }
-                            else if (availableModelNames.Count == 0)
-                            {
-                                <div style="color: red; font-size: 12px; margin-bottom: 5px;">❌ No models found for @searchDto.Make</div>
-                            }
-                            else
-                            {
-                                <div style="color: green; font-size: 12px; margin-bottom: 5px;">✅ Loaded @availableModelNames.Count models for @searchDto.Make</div>
-                            }
-                        }
                         <select @bind="searchDto.Model" @bind:after="SearchCars" class="filter-select" disabled="@(string.IsNullOrEmpty(searchDto.Make))">
                             <option value="">@(string.IsNullOrEmpty(searchDto.Make) ? "Select brand first" : "Any model")</option>
                             @if (availableModelNames != null && availableModelNames.Count > 0)
@@ -469,24 +461,36 @@
     private List<string>? availableBrandNames;
     private List<string>? availableModelNames;
     private string? previousSelectedBrand;
+    private bool showDebugPanel = false;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             availableBrandNames = await CarBrandService.GetActiveBrandNamesAsync();
-            Console.WriteLine($"DEBUG: Loaded {availableBrandNames?.Count ?? 0} car brands");
+            Console.WriteLine($"✅ DEBUG: Loaded {availableBrandNames?.Count ?? 0} car brands");
             
             if (availableBrandNames?.Count > 0)
             {
-                Console.WriteLine($"DEBUG: First few brands: {string.Join(", ", availableBrandNames.Take(5))}");
+                Console.WriteLine($"🏷️ DEBUG: First few brands: {string.Join(", ", availableBrandNames.Take(5))}");
+                
+                // Auto-show debug panel if brands fail to load or very few brands
+                if (availableBrandNames.Count < 10)
+                {
+                    showDebugPanel = true;
+                }
+            }
+            else
+            {
+                showDebugPanel = true; // Show debug if no brands loaded
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"ERROR: Failed to load car brands: {ex.Message}");
+            Console.WriteLine($"❌ ERROR: Failed to load car brands: {ex.Message}");
             Console.WriteLine($"ERROR: Stack trace: {ex.StackTrace}");
             availableBrandNames = new List<string>();
+            showDebugPanel = true; // Show debug on error
         }
         
         await SearchCars();
@@ -538,6 +542,13 @@
         // Clear the model selection when brand changes
         searchDto.Model = "";
         availableModelNames = null;
+        
+        // Show debug panel automatically when brand changes
+        if (!string.IsNullOrEmpty(selectedBrand))
+        {
+            showDebugPanel = true;
+        }
+        
         StateHasChanged(); // Force UI update immediately
         
         // Load models for the selected brand

@@ -472,35 +472,47 @@
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            availableBrandNames = await CarBrandService.GetActiveBrandNamesAsync();
-            Console.WriteLine($"✅ DEBUG: Loaded {availableBrandNames?.Count ?? 0} car brands");
-            
-            if (availableBrandNames?.Count > 0)
-            {
-                Console.WriteLine($"🏷️ DEBUG: First few brands: {string.Join(", ", availableBrandNames.Take(5))}");
-                
-                // Auto-show debug panel if brands fail to load or very few brands
-                if (availableBrandNames.Count < 10)
-                {
-                    showDebugPanel = true;
-                }
-            }
-            else
-            {
-                showDebugPanel = true; // Show debug if no brands loaded
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ ERROR: Failed to load car brands: {ex.Message}");
-            Console.WriteLine($"ERROR: Stack trace: {ex.StackTrace}");
-            availableBrandNames = new List<string>();
-            showDebugPanel = true; // Show debug on error
-        }
-        
+        // Initialize with mock data first to avoid prerendering issues
         await SearchCars();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                Console.WriteLine($"🔄 DEBUG: Starting to load car brands from API...");
+                availableBrandNames = await CarBrandService.GetActiveBrandNamesAsync();
+                Console.WriteLine($"✅ DEBUG: Loaded {availableBrandNames?.Count ?? 0} car brands");
+                
+                if (availableBrandNames?.Count > 0)
+                {
+                    Console.WriteLine($"🏷️ DEBUG: First few brands: {string.Join(", ", availableBrandNames.Take(5))}");
+                    
+                    // Auto-show debug panel if brands fail to load or very few brands
+                    if (availableBrandNames.Count < 10)
+                    {
+                        showDebugPanel = true;
+                    }
+                }
+                else
+                {
+                    showDebugPanel = true; // Show debug if no brands loaded
+                }
+                
+                StateHasChanged(); // Update UI after loading brands
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ ERROR: Failed to load car brands: {ex.Message}");
+                Console.WriteLine($"❌ ERROR: Exception type: {ex.GetType().Name}");
+                Console.WriteLine($"❌ ERROR: Stack trace: {ex.StackTrace}");
+                availableBrandNames = new List<string>();
+                showDebugPanel = true; // Show debug on error
+                StateHasChanged();
+            }
+        }
     }
 
     private async Task SearchCars()

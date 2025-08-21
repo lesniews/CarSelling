@@ -74,7 +74,7 @@ using (var scope = app.Services.CreateScope())
         logger.LogInformation($"Tables created: {string.Join(", ", tableNames)}");
         
         logger.LogInformation("FORCE: Seeding database with sample data...");
-        await SampleDataSeeder.SeedSampleDataAsync(context);
+        await SampleDataSeederFixed.SeedSampleDataAsync(context);
         logger.LogInformation("Database seeding completed successfully.");
         
         // Verify the data was created

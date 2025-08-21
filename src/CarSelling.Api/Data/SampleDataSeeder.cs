@@ -63,9 +63,10 @@ public static class SampleDataSeeder
                 Console.WriteLine($"Warning: Could not find brand '{brandName}' for model '{staticModel.Name}'");
             }
         }
-        
-        // OLD HARDCODED CODE - REMOVE ALL OF THIS
-        if (brandLookup.ContainsKey("Toyota"))
+
+        Console.WriteLine($"Successfully mapped {modelsToAdd.Count} models from static data");
+
+        // Add all models to database
         {
             var toyotaId = brandLookup["Toyota"];
             modelsToAdd.AddRange(new[]

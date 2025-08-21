@@ -203,6 +203,20 @@ public class CarModel
     public int StartYear { get; set; } = 1990;
     public int? EndYear { get; set; } // null if still in production
     public bool IsActive { get; set; } = true;
+    public List<ModelGeneration> Generations { get; set; } = new();
+}
+
+// Model Generations
+public class ModelGeneration
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public int CarModelId { get; set; }
+    public CarModel CarModel { get; set; } = null!;
+    public int StartYear { get; set; }
+    public int? EndYear { get; set; } // null if still in production
+    public string Description { get; set; } = string.Empty; // e.g., "Facelift", "Major redesign"
+    public bool IsActive { get; set; } = true;
 }
 
 // Comprehensive list of car brands
@@ -917,5 +931,143 @@ public static class CarModels
 
         // Caparo Models (Brand ID: 89)
         new CarModel { Id = 389, Name = "T1", CarBrandId = 89, Category = "Coupe", StartYear = 2006 }
+    };
+}
+
+// Comprehensive list of model generations
+public static class ModelGenerations
+{
+    public static readonly List<ModelGeneration> AllGenerations = new()
+    {
+        // Toyota Camry Generations (Model ID: 1)
+        new ModelGeneration { Id = 1, Name = "XV10", CarModelId = 1, StartYear = 1991, EndYear = 1996, Description = "Third generation" },
+        new ModelGeneration { Id = 2, Name = "XV20", CarModelId = 1, StartYear = 1996, EndYear = 2001, Description = "Fourth generation" },
+        new ModelGeneration { Id = 3, Name = "XV30", CarModelId = 1, StartYear = 2001, EndYear = 2006, Description = "Fifth generation" },
+        new ModelGeneration { Id = 4, Name = "XV40", CarModelId = 1, StartYear = 2006, EndYear = 2011, Description = "Sixth generation" },
+        new ModelGeneration { Id = 5, Name = "XV50", CarModelId = 1, StartYear = 2011, EndYear = 2017, Description = "Seventh generation" },
+        new ModelGeneration { Id = 6, Name = "XV70", CarModelId = 1, StartYear = 2017, EndYear = null, Description = "Eighth generation (current)" },
+
+        // Toyota Corolla Generations (Model ID: 2)
+        new ModelGeneration { Id = 7, Name = "E100", CarModelId = 2, StartYear = 1991, EndYear = 1995, Description = "Seventh generation" },
+        new ModelGeneration { Id = 8, Name = "E110", CarModelId = 2, StartYear = 1995, EndYear = 2000, Description = "Eighth generation" },
+        new ModelGeneration { Id = 9, Name = "E120/E130", CarModelId = 2, StartYear = 2000, EndYear = 2006, Description = "Ninth generation" },
+        new ModelGeneration { Id = 10, Name = "E140/E150", CarModelId = 2, StartYear = 2006, EndYear = 2013, Description = "Tenth generation" },
+        new ModelGeneration { Id = 11, Name = "E160/E170", CarModelId = 2, StartYear = 2013, EndYear = 2019, Description = "Eleventh generation" },
+        new ModelGeneration { Id = 12, Name = "E210", CarModelId = 2, StartYear = 2019, EndYear = null, Description = "Twelfth generation (current)" },
+
+        // Toyota Prius Generations (Model ID: 3)
+        new ModelGeneration { Id = 13, Name = "XW10", CarModelId = 3, StartYear = 1997, EndYear = 2003, Description = "First generation" },
+        new ModelGeneration { Id = 14, Name = "XW20", CarModelId = 3, StartYear = 2003, EndYear = 2009, Description = "Second generation" },
+        new ModelGeneration { Id = 15, Name = "XW30", CarModelId = 3, StartYear = 2009, EndYear = 2015, Description = "Third generation" },
+        new ModelGeneration { Id = 16, Name = "XW50", CarModelId = 3, StartYear = 2015, EndYear = 2023, Description = "Fourth generation" },
+        new ModelGeneration { Id = 17, Name = "XW60", CarModelId = 3, StartYear = 2023, EndYear = null, Description = "Fifth generation (current)" },
+
+        // Toyota RAV4 Generations (Model ID: 4)
+        new ModelGeneration { Id = 18, Name = "XA10", CarModelId = 4, StartYear = 1994, EndYear = 2000, Description = "First generation" },
+        new ModelGeneration { Id = 19, Name = "XA20", CarModelId = 4, StartYear = 2000, EndYear = 2005, Description = "Second generation" },
+        new ModelGeneration { Id = 20, Name = "XA30", CarModelId = 4, StartYear = 2005, EndYear = 2012, Description = "Third generation" },
+        new ModelGeneration { Id = 21, Name = "XA40", CarModelId = 4, StartYear = 2012, EndYear = 2018, Description = "Fourth generation" },
+        new ModelGeneration { Id = 22, Name = "XA50", CarModelId = 4, StartYear = 2018, EndYear = null, Description = "Fifth generation (current)" },
+
+        // Honda Accord Generations (Model ID: 12)
+        new ModelGeneration { Id = 23, Name = "CD5/CD7", CarModelId = 12, StartYear = 1993, EndYear = 1997, Description = "Fifth generation" },
+        new ModelGeneration { Id = 24, Name = "CG/CH", CarModelId = 12, StartYear = 1997, EndYear = 2002, Description = "Sixth generation" },
+        new ModelGeneration { Id = 25, Name = "CL7/CL8/CL9", CarModelId = 12, StartYear = 2002, EndYear = 2007, Description = "Seventh generation" },
+        new ModelGeneration { Id = 26, Name = "CU1/CU2", CarModelId = 12, StartYear = 2007, EndYear = 2012, Description = "Eighth generation" },
+        new ModelGeneration { Id = 27, Name = "CR2/CR6", CarModelId = 12, StartYear = 2012, EndYear = 2017, Description = "Ninth generation" },
+        new ModelGeneration { Id = 28, Name = "CV1/CV3", CarModelId = 12, StartYear = 2017, EndYear = 2022, Description = "Tenth generation" },
+        new ModelGeneration { Id = 29, Name = "CV4", CarModelId = 12, StartYear = 2022, EndYear = null, Description = "Eleventh generation (current)" },
+
+        // Honda Civic Generations (Model ID: 13)
+        new ModelGeneration { Id = 30, Name = "EG/EH/EJ", CarModelId = 13, StartYear = 1991, EndYear = 1995, Description = "Fifth generation" },
+        new ModelGeneration { Id = 31, Name = "EK/EM", CarModelId = 13, StartYear = 1995, EndYear = 2000, Description = "Sixth generation" },
+        new ModelGeneration { Id = 32, Name = "ES/EM2/EP3", CarModelId = 13, StartYear = 2000, EndYear = 2005, Description = "Seventh generation" },
+        new ModelGeneration { Id = 33, Name = "FA/FD/FN/FG", CarModelId = 13, StartYear = 2005, EndYear = 2011, Description = "Eighth generation" },
+        new ModelGeneration { Id = 34, Name = "FB/FC", CarModelId = 13, StartYear = 2011, EndYear = 2015, Description = "Ninth generation" },
+        new ModelGeneration { Id = 35, Name = "FC1/FC3", CarModelId = 13, StartYear = 2015, EndYear = 2021, Description = "Tenth generation" },
+        new ModelGeneration { Id = 36, Name = "FL1/FL4", CarModelId = 13, StartYear = 2021, EndYear = null, Description = "Eleventh generation (current)" },
+
+        // Honda CR-V Generations (Model ID: 14)
+        new ModelGeneration { Id = 37, Name = "RD1/RD3", CarModelId = 14, StartYear = 1995, EndYear = 2001, Description = "First generation" },
+        new ModelGeneration { Id = 38, Name = "RD4/RD5/RD7", CarModelId = 14, StartYear = 2001, EndYear = 2006, Description = "Second generation" },
+        new ModelGeneration { Id = 39, Name = "RE1/RE2/RE4", CarModelId = 14, StartYear = 2006, EndYear = 2011, Description = "Third generation" },
+        new ModelGeneration { Id = 40, Name = "RM1/RM3/RM4", CarModelId = 14, StartYear = 2011, EndYear = 2016, Description = "Fourth generation" },
+        new ModelGeneration { Id = 41, Name = "RW1/RW2", CarModelId = 14, StartYear = 2016, EndYear = 2022, Description = "Fifth generation" },
+        new ModelGeneration { Id = 42, Name = "RT1/RT6", CarModelId = 14, StartYear = 2022, EndYear = null, Description = "Sixth generation (current)" },
+
+        // Ford F-150 Generations (Model ID: 22)
+        new ModelGeneration { Id = 43, Name = "Ninth Generation", CarModelId = 22, StartYear = 1992, EndYear = 1996, Description = "Major redesign" },
+        new ModelGeneration { Id = 44, Name = "Tenth Generation", CarModelId = 22, StartYear = 1997, EndYear = 2003, Description = "Aerodynamic redesign" },
+        new ModelGeneration { Id = 45, Name = "Eleventh Generation", CarModelId = 22, StartYear = 2004, EndYear = 2008, Description = "P2 platform" },
+        new ModelGeneration { Id = 46, Name = "Twelfth Generation", CarModelId = 22, StartYear = 2009, EndYear = 2014, Description = "SVT Raptor introduced" },
+        new ModelGeneration { Id = 47, Name = "Thirteenth Generation", CarModelId = 22, StartYear = 2015, EndYear = 2020, Description = "Aluminum body" },
+        new ModelGeneration { Id = 48, Name = "Fourteenth Generation", CarModelId = 22, StartYear = 2021, EndYear = null, Description = "T6 platform (current)" },
+
+        // Ford Mustang Generations (Model ID: 23)
+        new ModelGeneration { Id = 49, Name = "SN95", CarModelId = 23, StartYear = 1994, EndYear = 2004, Description = "Fourth generation" },
+        new ModelGeneration { Id = 50, Name = "S197", CarModelId = 23, StartYear = 2005, EndYear = 2014, Description = "Fifth generation" },
+        new ModelGeneration { Id = 51, Name = "S550", CarModelId = 23, StartYear = 2015, EndYear = 2023, Description = "Sixth generation" },
+        new ModelGeneration { Id = 52, Name = "S650", CarModelId = 23, StartYear = 2024, EndYear = null, Description = "Seventh generation (current)" },
+
+        // Chevrolet Silverado Generations (Model ID: 32)
+        new ModelGeneration { Id = 53, Name = "GMT800", CarModelId = 32, StartYear = 1999, EndYear = 2006, Description = "First generation" },
+        new ModelGeneration { Id = 54, Name = "GMT900", CarModelId = 32, StartYear = 2007, EndYear = 2013, Description = "Second generation" },
+        new ModelGeneration { Id = 55, Name = "GMT K2XX", CarModelId = 32, StartYear = 2014, EndYear = 2018, Description = "Third generation" },
+        new ModelGeneration { Id = 56, Name = "GMT T1XX", CarModelId = 32, StartYear = 2019, EndYear = null, Description = "Fourth generation (current)" },
+
+        // Chevrolet Camaro Generations (Model ID: 37)
+        new ModelGeneration { Id = 57, Name = "Fourth Generation", CarModelId = 37, StartYear = 1993, EndYear = 2002, Description = "F-body platform" },
+        new ModelGeneration { Id = 58, Name = "Fifth Generation", CarModelId = 37, StartYear = 2010, EndYear = 2015, Description = "Zeta platform" },
+        new ModelGeneration { Id = 59, Name = "Sixth Generation", CarModelId = 37, StartYear = 2016, EndYear = null, Description = "Alpha platform (current)" },
+
+        // BMW 3 Series Generations (Model ID: 44)
+        new ModelGeneration { Id = 60, Name = "E36", CarModelId = 44, StartYear = 1990, EndYear = 1998, Description = "Third generation" },
+        new ModelGeneration { Id = 61, Name = "E46", CarModelId = 44, StartYear = 1998, EndYear = 2006, Description = "Fourth generation" },
+        new ModelGeneration { Id = 62, Name = "E90/E91/E92/E93", CarModelId = 44, StartYear = 2005, EndYear = 2013, Description = "Fifth generation" },
+        new ModelGeneration { Id = 63, Name = "F30/F31/F34/F35", CarModelId = 44, StartYear = 2012, EndYear = 2019, Description = "Sixth generation" },
+        new ModelGeneration { Id = 64, Name = "G20/G21", CarModelId = 44, StartYear = 2019, EndYear = null, Description = "Seventh generation (current)" },
+
+        // BMW 5 Series Generations (Model ID: 45)
+        new ModelGeneration { Id = 65, Name = "E34", CarModelId = 45, StartYear = 1988, EndYear = 1996, Description = "Third generation" },
+        new ModelGeneration { Id = 66, Name = "E39", CarModelId = 45, StartYear = 1995, EndYear = 2003, Description = "Fourth generation" },
+        new ModelGeneration { Id = 67, Name = "E60/E61", CarModelId = 45, StartYear = 2003, EndYear = 2010, Description = "Fifth generation" },
+        new ModelGeneration { Id = 68, Name = "F10/F11/F07", CarModelId = 45, StartYear = 2009, EndYear = 2017, Description = "Sixth generation" },
+        new ModelGeneration { Id = 69, Name = "G30/G31", CarModelId = 45, StartYear = 2016, EndYear = null, Description = "Seventh generation (current)" },
+
+        // Mercedes-Benz C-Class Generations (Model ID: 48)
+        new ModelGeneration { Id = 70, Name = "W202", CarModelId = 48, StartYear = 1993, EndYear = 2000, Description = "First generation" },
+        new ModelGeneration { Id = 71, Name = "W203", CarModelId = 48, StartYear = 2000, EndYear = 2007, Description = "Second generation" },
+        new ModelGeneration { Id = 72, Name = "W204", CarModelId = 48, StartYear = 2007, EndYear = 2014, Description = "Third generation" },
+        new ModelGeneration { Id = 73, Name = "W205", CarModelId = 48, StartYear = 2014, EndYear = 2021, Description = "Fourth generation" },
+        new ModelGeneration { Id = 74, Name = "W206", CarModelId = 48, StartYear = 2021, EndYear = null, Description = "Fifth generation (current)" },
+
+        // Mercedes-Benz E-Class Generations (Model ID: 49)
+        new ModelGeneration { Id = 75, Name = "W124", CarModelId = 49, StartYear = 1984, EndYear = 1995, Description = "Second generation" },
+        new ModelGeneration { Id = 76, Name = "W210", CarModelId = 49, StartYear = 1995, EndYear = 2002, Description = "Third generation" },
+        new ModelGeneration { Id = 77, Name = "W211", CarModelId = 49, StartYear = 2002, EndYear = 2009, Description = "Fourth generation" },
+        new ModelGeneration { Id = 78, Name = "W212", CarModelId = 49, StartYear = 2009, EndYear = 2016, Description = "Fifth generation" },
+        new ModelGeneration { Id = 79, Name = "W213", CarModelId = 49, StartYear = 2016, EndYear = null, Description = "Sixth generation (current)" },
+
+        // Audi A4 Generations (Model ID: 51)
+        new ModelGeneration { Id = 80, Name = "B5", CarModelId = 51, StartYear = 1994, EndYear = 2001, Description = "First generation" },
+        new ModelGeneration { Id = 81, Name = "B6", CarModelId = 51, StartYear = 2000, EndYear = 2004, Description = "Second generation" },
+        new ModelGeneration { Id = 82, Name = "B7", CarModelId = 51, StartYear = 2004, EndYear = 2008, Description = "Third generation" },
+        new ModelGeneration { Id = 83, Name = "B8", CarModelId = 51, StartYear = 2007, EndYear = 2015, Description = "Fourth generation" },
+        new ModelGeneration { Id = 84, Name = "B9", CarModelId = 51, StartYear = 2015, EndYear = null, Description = "Fifth generation (current)" },
+
+        // Tesla Model 3 Generations (Model ID: 129)
+        new ModelGeneration { Id = 85, Name = "Original", CarModelId = 129, StartYear = 2017, EndYear = 2023, Description = "Original design" },
+        new ModelGeneration { Id = 86, Name = "Highland", CarModelId = 129, StartYear = 2023, EndYear = null, Description = "Refreshed design (current)" },
+
+        // Tesla Model S Generations (Model ID: 128)
+        new ModelGeneration { Id = 87, Name = "Original", CarModelId = 128, StartYear = 2012, EndYear = 2021, Description = "Original design" },
+        new ModelGeneration { Id = 88, Name = "Refresh", CarModelId = 128, StartYear = 2021, EndYear = null, Description = "Plaid refresh (current)" },
+
+        // Porsche 911 Generations (Model ID: 76)
+        new ModelGeneration { Id = 89, Name = "993", CarModelId = 76, StartYear = 1993, EndYear = 1998, Description = "Fourth generation" },
+        new ModelGeneration { Id = 90, Name = "996", CarModelId = 76, StartYear = 1997, EndYear = 2005, Description = "Fifth generation" },
+        new ModelGeneration { Id = 91, Name = "997", CarModelId = 76, StartYear = 2004, EndYear = 2012, Description = "Sixth generation" },
+        new ModelGeneration { Id = 92, Name = "991", CarModelId = 76, StartYear = 2011, EndYear = 2019, Description = "Seventh generation" },
+        new ModelGeneration { Id = 93, Name = "992", CarModelId = 76, StartYear = 2019, EndYear = null, Description = "Eighth generation (current)" }
     };
 }

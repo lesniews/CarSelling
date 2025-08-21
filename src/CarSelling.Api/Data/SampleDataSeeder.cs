@@ -12,6 +12,7 @@ public static class SampleDataSeeder
         Console.WriteLine("Clearing existing data...");
         context.CarListings.RemoveRange(context.CarListings);
         context.Users.RemoveRange(context.Users);
+        context.ModelGenerations.RemoveRange(context.ModelGenerations);
         context.CarModels.RemoveRange(context.CarModels);
         context.CarBrands.RemoveRange(context.CarBrands);
         await context.SaveChangesAsync();
@@ -128,6 +129,55 @@ public static class SampleDataSeeder
         // Add all models to database
         context.CarModels.AddRange(modelsToAdd);
         await context.SaveChangesAsync();
+        Console.WriteLine("Car models saved to database.");
+
+        // Get the actual model IDs from database for generation relationships
+        var modelLookup = context.CarModels.ToDictionary(m => new { m.CarBrandId, m.Name }, m => m.Id);
+
+        // Seed model generations with correct model IDs
+        Console.WriteLine("Creating model generations...");
+        var generationsToAdd = new List<ModelGeneration>();
+
+        // Map generations to correct model IDs using brand name and model name lookup
+        var brandModelMap = context.CarBrands.ToDictionary(b => b.Id, b => b.Name);
+        
+        foreach (var generation in ModelGenerations.AllGenerations)
+        {
+            // Find the model this generation belongs to by looking up the original model ID
+            var originalModel = CarModels.AllModels.FirstOrDefault(m => m.Id == generation.CarModelId);
+            if (originalModel != null)
+            {
+                // Find the brand name for this model
+                var brandName = CarBrands.AllBrands.FirstOrDefault(b => b.Id == originalModel.CarBrandId)?.Name;
+                if (!string.IsNullOrEmpty(brandName))
+                {
+                    // Find the actual database model ID
+                    var actualBrandId = brandLookup.GetValueOrDefault(brandName, -1);
+                    if (actualBrandId != -1)
+                    {
+                        var modelKey = new { CarBrandId = actualBrandId, Name = originalModel.Name };
+                        if (modelLookup.ContainsKey(modelKey))
+                        {
+                            var actualModelId = modelLookup[modelKey];
+                            generationsToAdd.Add(new ModelGeneration
+                            {
+                                Name = generation.Name,
+                                CarModelId = actualModelId,
+                                StartYear = generation.StartYear,
+                                EndYear = generation.EndYear,
+                                Description = generation.Description,
+                                IsActive = generation.IsActive
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        Console.WriteLine($"Adding {generationsToAdd.Count} model generations to context...");
+        context.ModelGenerations.AddRange(generationsToAdd);
+        await context.SaveChangesAsync();
+        Console.WriteLine("Model generations saved to database.");
 
         // Create sample users
         var users = new List<User>

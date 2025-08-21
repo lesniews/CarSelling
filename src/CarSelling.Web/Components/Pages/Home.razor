@@ -2,6 +2,7 @@
 @inject ICarListingApiService CarListingService
 @inject CarBrandApiService CarBrandService
 @inject CarModelApiService CarModelService
+@inject ModelGenerationApiService ModelGenerationService
 @inject NavigationManager Navigation
 @using CarSelling.Shared.Models
 @using CarSelling.Shared.DTOs
@@ -128,7 +129,7 @@
                     </div>
                     <div class="filter-field">
                         <label>Car Model</label>
-                        <select @bind="searchDto.Model" @bind:after="SearchCars" class="filter-select" disabled="@(string.IsNullOrEmpty(searchDto.Make))">
+                        <select @bind="searchDto.Model" @bind:after="OnModelChanged" class="filter-select" disabled="@(string.IsNullOrEmpty(searchDto.Make))">
                             <option value="">@(string.IsNullOrEmpty(searchDto.Make) ? "Select brand first" : "Any model")</option>
                             @if (availableModelNames != null && availableModelNames.Count > 0)
                             {
@@ -145,8 +146,19 @@
                     </div>
                     <div class="filter-field">
                         <label>Model Generation</label>
-                        <select @bind="searchDto.ModelGeneration" @bind:after="SearchCars" class="filter-select">
-                            <option value="">Any generation</option>
+                        <select @bind="searchDto.ModelGeneration" @bind:after="SearchCars" class="filter-select" disabled="@(string.IsNullOrEmpty(searchDto.Model))">
+                            <option value="">@(string.IsNullOrEmpty(searchDto.Model) ? "Select model first" : "Any generation")</option>
+                            @if (availableGenerationNames != null && availableGenerationNames.Count > 0)
+                            {
+                                @foreach (var generation in availableGenerationNames)
+                                {
+                                    <option value="@generation">@generation</option>
+                                }
+                            }
+                            else if (!string.IsNullOrEmpty(searchDto.Model))
+                            {
+                                <option disabled>Loading generations for @searchDto.Model...</option>
+                            }
                         </select>
                     </div>
                     <div class="filter-field">
@@ -467,7 +479,9 @@
     private readonly List<string> availableEquipment = CarEquipment.AvailableEquipment;
     private List<string>? availableBrandNames;
     private List<string>? availableModelNames;
+    private List<string>? availableGenerationNames;
     private string? previousSelectedBrand;
+    private string? previousSelectedModel;
     private bool showDebugPanel = false;
 
     protected override async Task OnInitializedAsync()
@@ -620,9 +634,11 @@
         var selectedBrand = searchDto.Make ?? "";
         Console.WriteLine($"🔥 DEBUG: OnBrandChangedBind called! Brand: '{selectedBrand}'");
         
-        // Clear the model selection when brand changes
+        // Clear the model and generation selection when brand changes
         searchDto.Model = "";
+        searchDto.ModelGeneration = "";
         availableModelNames = null;
+        availableGenerationNames = null;
         
         // Show debug panel automatically when brand changes
         if (!string.IsNullOrEmpty(selectedBrand))
@@ -669,6 +685,54 @@
         await SearchCars();
     }
 
+    private async Task OnModelChanged()
+    {
+        var selectedModel = searchDto.Model ?? "";
+        Console.WriteLine($"🚗 DEBUG: OnModelChanged called! Model: '{selectedModel}'");
+        
+        // Clear the generation selection when model changes
+        searchDto.ModelGeneration = "";
+        availableGenerationNames = null;
+        
+        StateHasChanged(); // Force UI update immediately
+        
+        // Load generations for the selected model
+        if (!string.IsNullOrEmpty(selectedModel) && !string.IsNullOrEmpty(searchDto.Make) && selectedModel != previousSelectedModel)
+        {
+            Console.WriteLine($"🚀 DEBUG: Loading generations for {searchDto.Make} {selectedModel}");
+            try
+            {
+                availableGenerationNames = await ModelGenerationService.GetGenerationNamesByBrandAndModelAsync(searchDto.Make, selectedModel);
+                Console.WriteLine($"✅ DEBUG: Loaded {availableGenerationNames?.Count ?? 0} generations for {searchDto.Make} {selectedModel}");
+                
+                if (availableGenerationNames?.Count > 0)
+                {
+                    Console.WriteLine($"📋 DEBUG: First few generations: {string.Join(", ", availableGenerationNames.Take(3))}");
+                }
+                
+                previousSelectedModel = selectedModel;
+                StateHasChanged(); // Force UI update after loading generations
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ ERROR: Failed to load generations for {searchDto.Make} {selectedModel}: {ex.Message}");
+                Console.WriteLine($"ERROR: Stack trace: {ex.StackTrace}");
+                availableGenerationNames = new List<string>();
+                StateHasChanged();
+            }
+        }
+        else if (string.IsNullOrEmpty(selectedModel))
+        {
+            Console.WriteLine("🧹 DEBUG: Model cleared, resetting generations");
+            availableGenerationNames = null;
+            previousSelectedModel = null;
+            StateHasChanged();
+        }
+        
+        // Trigger search after model/generation change
+        await SearchCars();
+    }
+
     private async Task TestBrandChange()
     {
         Console.WriteLine("🧪 TEST: Manually triggering brand change to Toyota");
@@ -681,7 +745,9 @@
         searchDto = new ExtendedCarListingSearchDto();
         selectedEquipment.Clear();
         availableModelNames = null;
+        availableGenerationNames = null;
         previousSelectedBrand = null;
+        previousSelectedModel = null;
         await SearchCars();
     }
 

@@ -32,6 +32,14 @@ builder.Services.AddHttpClient<CarModelApiService>(client =>
     Console.WriteLine($"Configured Car Model API base URL: {apiBaseUrl}");
 });
 
+// Add HTTP client for model generations API
+builder.Services.AddHttpClient<ModelGenerationApiService>(client =>
+{
+    var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:5004/";
+    client.BaseAddress = new Uri(apiBaseUrl);
+    Console.WriteLine($"Configured Model Generation API base URL: {apiBaseUrl}");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline

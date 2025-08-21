@@ -80,10 +80,12 @@ using (var scope = app.Services.CreateScope())
         // Verify the data was created
         var brandCount = await context.CarBrands.CountAsync();
         var modelCount = await context.CarModels.CountAsync();
+        var generationCount = await context.ModelGenerations.CountAsync();
         var listingCount = await context.CarListings.CountAsync();
         logger.LogInformation($"=== DATABASE VERIFICATION ===");
         logger.LogInformation($"Brands: {brandCount}");
-        logger.LogInformation($"Models: {modelCount}"); 
+        logger.LogInformation($"Models: {modelCount}");
+        logger.LogInformation($"Generations: {generationCount}");
         logger.LogInformation($"Listings: {listingCount}");
         
         if (brandCount == 0)

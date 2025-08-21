@@ -11,6 +11,7 @@ public class CarSellingContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<CarBrand> CarBrands { get; set; }
     public DbSet<CarModel> CarModels { get; set; }
+    public DbSet<ModelGeneration> ModelGenerations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -156,6 +157,30 @@ public class CarSellingContext : DbContext
 
             // Create composite unique index for brand + model name
             entity.HasIndex(e => new { e.CarBrandId, e.Name }).IsUnique();
+
+            // Configure relationship with ModelGenerations
+            entity.HasMany(e => e.Generations)
+                .WithOne(g => g.CarModel)
+                .HasForeignKey(g => g.CarModelId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<ModelGeneration>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(200);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+
+            // Create indexes for better query performance
+            entity.HasIndex(e => e.Name);
+            entity.HasIndex(e => e.CarModelId);
+            entity.HasIndex(e => e.StartYear);
+            entity.HasIndex(e => e.EndYear);
+            entity.HasIndex(e => e.IsActive);
+
+            // Create composite unique index for model + generation name
+            entity.HasIndex(e => new { e.CarModelId, e.Name }).IsUnique();
         });
     }
 }

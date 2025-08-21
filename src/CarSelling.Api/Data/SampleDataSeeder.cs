@@ -36,10 +36,35 @@ public static class SampleDataSeeder
         // Get the actual brand IDs from database for model relationships
         var brandLookup = context.CarBrands.ToDictionary(b => b.Name, b => b.Id);
 
-        // Seed car models with correct brand IDs
+        // Seed all car models with correct brand IDs using comprehensive static data
+        Console.WriteLine($"Creating car models from {CarModels.AllModels.Count} comprehensive models...");
         var modelsToAdd = new List<CarModel>();
         
-        // Toyota Models
+        // Map all models from static data to database with correct brand IDs
+        foreach (var staticModel in CarModels.AllModels)
+        {
+            // Find the brand name for this model
+            var brandName = CarBrands.AllBrands.FirstOrDefault(b => b.Id == staticModel.CarBrandId)?.Name;
+            if (!string.IsNullOrEmpty(brandName) && brandLookup.ContainsKey(brandName))
+            {
+                var actualBrandId = brandLookup[brandName];
+                modelsToAdd.Add(new CarModel
+                {
+                    Name = staticModel.Name,
+                    CarBrandId = actualBrandId,
+                    Category = staticModel.Category,
+                    StartYear = staticModel.StartYear,
+                    EndYear = staticModel.EndYear,
+                    IsActive = staticModel.IsActive
+                });
+            }
+            else
+            {
+                Console.WriteLine($"Warning: Could not find brand '{brandName}' for model '{staticModel.Name}'");
+            }
+        }
+        
+        // OLD HARDCODED CODE - REMOVE ALL OF THIS
         if (brandLookup.ContainsKey("Toyota"))
         {
             var toyotaId = brandLookup["Toyota"];
@@ -139,7 +164,7 @@ public static class SampleDataSeeder
         var generationsToAdd = new List<ModelGeneration>();
 
         // Map generations to correct model IDs using brand name and model name lookup
-        var brandModelMap = context.CarBrands.ToDictionary(b => b.Id, b => b.Name);
+        Console.WriteLine($"Processing {ModelGenerations.AllGenerations.Count} generations...");
         
         foreach (var generation in ModelGenerations.AllGenerations)
         {
@@ -149,9 +174,11 @@ public static class SampleDataSeeder
             {
                 // Find the brand name for this model
                 var brandName = CarBrands.AllBrands.FirstOrDefault(b => b.Id == originalModel.CarBrandId)?.Name;
+                Console.WriteLine($"Processing generation {generation.Name} for {brandName} {originalModel.Name}");
+                
                 if (!string.IsNullOrEmpty(brandName))
                 {
-                    // Find the actual database model ID
+                    // Find the actual database brand ID
                     var actualBrandId = brandLookup.GetValueOrDefault(brandName, -1);
                     if (actualBrandId != -1)
                     {
@@ -159,6 +186,7 @@ public static class SampleDataSeeder
                         if (modelLookup.ContainsKey(modelKey))
                         {
                             var actualModelId = modelLookup[modelKey];
+                            Console.WriteLine($"✅ Mapping generation {generation.Name} to database model ID {actualModelId}");
                             generationsToAdd.Add(new ModelGeneration
                             {
                                 Name = generation.Name,
@@ -169,8 +197,20 @@ public static class SampleDataSeeder
                                 IsActive = generation.IsActive
                             });
                         }
+                        else
+                        {
+                            Console.WriteLine($"❌ Could not find model {originalModel.Name} for brand {brandName} (Brand ID: {actualBrandId})");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"❌ Could not find brand {brandName} in database");
                     }
                 }
+            }
+            else
+            {
+                Console.WriteLine($"❌ Could not find original model for generation ID {generation.CarModelId}");
             }
         }
 

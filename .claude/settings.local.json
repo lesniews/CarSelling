@@ -19,7 +19,8 @@
       "Bash(curl:*)",
       "Bash(ss:*)",
       "Bash(chmod:*)",
-      "Bash(dotnet run:*)"
+      "Bash(dotnet run:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }
